@@ -1,0 +1,205 @@
+{
+  "api": {
+    "name": "TruvideoSdkCameraPlugin",
+    "slug": "truvideosdkcameraplugin",
+    "docs": "",
+    "tags": [],
+    "methods": [
+      {
+        "name": "initCameraScreen",
+        "signature": "(options: { value: CameraConfiguration; }) => Promise<{ value: string; }>",
+        "parameters": [
+          {
+            "name": "options",
+            "docs": "",
+            "type": "{ value: CameraConfiguration; }"
+          }
+        ],
+        "returns": "Promise<{ value: string; }>",
+        "tags": [],
+        "docs": "",
+        "complexTypes": [
+          "CameraConfiguration"
+        ],
+        "slug": "initcamerascreen"
+      }
+    ],
+    "properties": []
+  },
+  "interfaces": [
+    {
+      "name": "CameraConfiguration",
+      "slug": "cameraconfiguration",
+      "docs": "",
+      "tags": [],
+      "methods": [],
+      "properties": [
+        {
+          "name": "lensFacing",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [
+            "LensFacing"
+          ],
+          "type": "LensFacing"
+        },
+        {
+          "name": "flashMode",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [
+            "FlashMode"
+          ],
+          "type": "FlashMode"
+        },
+        {
+          "name": "orientation",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [
+            "Orientation"
+          ],
+          "type": "Orientation"
+        },
+        {
+          "name": "outputPath",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [],
+          "type": "string"
+        },
+        {
+          "name": "frontResolutions",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [],
+          "type": "string[]"
+        },
+        {
+          "name": "frontResolution",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [],
+          "type": "string"
+        },
+        {
+          "name": "backResolutions",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [],
+          "type": "string[]"
+        },
+        {
+          "name": "backResolution",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [],
+          "type": "string"
+        },
+        {
+          "name": "mode",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [
+            "Mode"
+          ],
+          "type": "Mode"
+        }
+      ]
+    }
+  ],
+  "enums": [
+    {
+      "name": "LensFacing",
+      "slug": "lensfacing",
+      "members": [
+        {
+          "name": "Back",
+          "value": "'back'",
+          "tags": [],
+          "docs": ""
+        },
+        {
+          "name": "Front",
+          "value": "'front'",
+          "tags": [],
+          "docs": ""
+        }
+      ]
+    },
+    {
+      "name": "FlashMode",
+      "slug": "flashmode",
+      "members": [
+        {
+          "name": "Off",
+          "value": "'off'",
+          "tags": [],
+          "docs": ""
+        },
+        {
+          "name": "On",
+          "value": "'on'",
+          "tags": [],
+          "docs": ""
+        }
+      ]
+    },
+    {
+      "name": "Orientation",
+      "slug": "orientation",
+      "members": [
+        {
+          "name": "Portrait",
+          "value": "'portrait'",
+          "tags": [],
+          "docs": ""
+        },
+        {
+          "name": "LandscapeLeft",
+          "value": "'landscapeLeft'",
+          "tags": [],
+          "docs": ""
+        },
+        {
+          "name": "LandscapeRight",
+          "value": "'landscapeRight'",
+          "tags": [],
+          "docs": ""
+        },
+        {
+          "name": "PortraitReverse",
+          "value": "'portraitReverse'",
+          "tags": [],
+          "docs": ""
+        }
+      ]
+    },
+    {
+      "name": "Mode",
+      "slug": "mode",
+      "members": [
+        {
+          "name": "Video",
+          "value": "'video'",
+          "tags": [],
+          "docs": ""
+        },
+        {
+          "name": "Picture",
+          "value": "'picture'",
+          "tags": [],
+          "docs": ""
+        },
+        {
+          "name": "VideoAndPicture",
+          "value": "'videoAndPicture'",
+          "tags": [],
+          "docs": ""
+        }
+      ]
+    }
+  ],
+  "typeAliases": [],
+  "pluginConfigs": []
+}
