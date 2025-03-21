@@ -2,21 +2,21 @@
 
 buildscript {
     repositories {
+        google()
+        mavenCentral()
         maven {
             url 'https://jitpack.io'
         }
-        google()
-        mavenCentral()
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:8.7.2'
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.9.20"
+//      classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.9.20"
     }
 }
 plugins {
     id 'com.android.library'
     id 'org.jetbrains.kotlin.android'
-//    id 'org.jetbrains.kotlin.plugin.compose' version '1.9.20' // If using Jetpack Compose
+   id 'org.jetbrains.kotlin.plugin.compose' version '1.9.20' // If using Jetpack Compose
 }
 ext {
     junitVersion = project.hasProperty('junitVersion') ? rootProject.ext.junitVersion : '4.13.2'
@@ -57,11 +57,11 @@ android {
 }
 
 repositories {
+    google()
+    mavenCentral()
     maven {
         url 'https://jitpack.io'
     }
-    google()
-    mavenCentral()
 }
 
 
@@ -80,6 +80,7 @@ dependencies {
     androidTestImplementation "androidx.test.ext:junit:$androidxJunitVersion"
     androidTestImplementation "androidx.test.espresso:espresso-core:$androidxEspressoCoreVersion"
     implementation 'com.github.Truvideo:truvideo-sdk-android-camera:76.3.9'
+    
     androidTestImplementation platform('androidx.compose:compose-bom:2024.04.01')
     androidTestImplementation 'androidx.compose.ui:ui-test-junit4'
     debugImplementation 'androidx.compose.ui:ui-tooling'
