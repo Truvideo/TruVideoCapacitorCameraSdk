@@ -61,7 +61,9 @@ public class CameraActivity : ComponentActivity() {
         }
     }
     fun getIntentData(){
-        configuration = intent.getStringExtra("configuration")!!
+        if(intent.hasExtra("configuration")){
+            configuration = intent.getStringExtra("configuration")!!
+        }
     }
     private fun openCamera(context: Context, cameraScreen: ActivityResultLauncher<TruvideoSdkCameraConfiguration>?) {
         // Start camera with configuration
