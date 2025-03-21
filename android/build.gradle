@@ -94,10 +94,12 @@ dependencies {
     androidTestImplementation "androidx.test.espresso:espresso-core:$androidxEspressoCoreVersion"
 
     implementation 'com.github.Truvideo:truvideo-sdk-android-camera:76.3.9'
+    implementation 'com.github.Truvideo:truvideo-sdk-android-core:76.2.5'
     implementation "androidx.compose.compiler:compiler:1.5.11"  // ✅ ADD THIS LINE
     androidTestImplementation platform('androidx.compose:compose-bom:2024.04.01')
 
     androidTestImplementation 'androidx.compose.ui:ui-test-junit4'
     debugImplementation 'androidx.compose.ui:ui-tooling'
     debugImplementation 'androidx.compose.ui:ui-test-manifest'
+    implementation "org.kodein.di:kodein-di:7.21.1"
 }
