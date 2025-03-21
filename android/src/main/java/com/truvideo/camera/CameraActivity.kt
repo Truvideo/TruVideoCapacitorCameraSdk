@@ -19,7 +19,7 @@ import com.truvideo.sdk.camera.model.TruvideoSdkCameraResolution
 import com.truvideo.sdk.camera.ui.activities.camera.TruvideoSdkCameraContract
 import org.json.JSONObject
 
-class CameraActivity : ComponentActivity() {
+public class CameraActivity : ComponentActivity() {
     var configuration = ""
     var lensFacing = TruvideoSdkCameraLensFacing.BACK
     var flashMode = TruvideoSdkCameraFlashMode.OFF
