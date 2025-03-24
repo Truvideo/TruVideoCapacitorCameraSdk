@@ -1,7 +1,6 @@
-import { CameraConfiguration } from "./cameraConfigInterface";
 export interface TruvideoSdkCameraPlugin {
     initCameraScreen(options: {
-        value: CameraConfiguration;
+        value: string;
     }): Promise<{
         value: string;
     }>;
