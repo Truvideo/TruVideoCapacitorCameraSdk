@@ -6,7 +6,7 @@ import TruvideoSdkCamera
  * Please read the Capacitor iOS Plugin Development Guide
  * here: https://capacitorjs.com/docs/plugins/ios
  */
-@objc(TruvideoSdkCamera)
+@objc(TruvideoSdkCameraPlugin)
 public class TruvideoSdkCameraPlugin: CAPPlugin, CAPBridgedPlugin {
     public let identifier = "TruvideoSdkCameraPlugin"
     public let jsName = "TruvideoSdkCamera"
@@ -16,14 +16,14 @@ public class TruvideoSdkCameraPlugin: CAPPlugin, CAPBridgedPlugin {
         CAPPluginMethod(name: "initCameraScreen", returnType: CAPPluginReturnPromise) // Registering initCameraScreen
     ]
 
-    private let implementation = TruvideoSdkCamera()
+    // private let implementation = TruvideoSdkCamera()
 
-    @objc func echo(_ call: CAPPluginCall) {
-        let value = call.getString("value") ?? ""
-        call.resolve([
-            "value": implementation.echo(value)
-        ])
-    }
+    // @objc func echo(_ call: CAPPluginCall) {
+    //     let value = call.getString("value") ?? ""
+    //     call.resolve([
+    //         "value": implementation.echo(value)
+    //     ])
+    // }
 
 
  /**
