@@ -33,7 +33,7 @@ public class TruvideoSdkCameraPlugin: CAPPlugin, CAPBridgedPlugin {
         - completion: A closure to handle the camera result upon completion.
             - cameraResult: The result of the camera operation.
      */
-    @obj func initCameraScreen(viewController: UIViewController, _ completion: @escaping (_ cameraResult: TruvideoSdkCameraResult) -> Void) {
+    @objc func initCameraScreen(viewController: UIViewController, _ completion: @escaping (_ cameraResult: TruvideoSdkCameraResult) -> Void) {
         DispatchQueue.main.async {
             // Retrieving information about the device's camera functionality.
             let cameraInfo: TruvideoSdkCameraInformation = TruvideoSdkCamera.camera.getTruvideoSdkCameraInformation()
