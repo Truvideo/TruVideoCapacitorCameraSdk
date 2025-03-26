@@ -13,6 +13,7 @@ import Combine
 public class TruvideoSdkCameraPlugin: CAPPlugin, CAPBridgedPlugin {
     public let identifier = "TruvideoSdkCameraPlugin"
     public let jsName = "TruvideoSdkCamera"
+    private var disposeBag = Set<AnyCancellable>()
     
     public let pluginMethods: [CAPPluginMethod] = [
         CAPPluginMethod(name: "echo", returnType: CAPPluginReturnPromise),
@@ -205,6 +206,25 @@ public class TruvideoSdkCameraPlugin: CAPPlugin, CAPBridgedPlugin {
           completion(false)
         }
       }
+    override public func load() {
+           super.load()
+           subscribeToCameraEvents()
+       }
+       
+       private func subscribeToCameraEvents() {
+           TruvideoSdkCamera.events
+               .sink { [weak self] cameraEvent in
+                   guard let self = self else { return }
+                   let eventType = String(describing: cameraEvent.type) // Convert enum to string
+                       
+                   let eventData: [String: Any] = [
+                        "type": eventType,
+                        "createdAt": cameraEvent.createdAt.timeIntervalSince1970
+                   ]
+                   self.notifyListeners("cameraEvent", data: eventData)
+               }
+               .store(in: &disposeBag)
+       }
 }
     
 extension TruvideoSdkCameraResult {
