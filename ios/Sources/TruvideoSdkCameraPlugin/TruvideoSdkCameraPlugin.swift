@@ -27,72 +27,67 @@ public class TruvideoSdkCameraPlugin: CAPPlugin, CAPBridgedPlugin {
             "value": value
         ])
     }
+
     @objc func initCameraScreen(_ call: CAPPluginCall) {
         let jsonData = call.getString("configuration") ?? ""
         
         guard let data = jsonData.data(using: .utf8) else {
-            print("Invalid JSON string")
-            //reject("Invalid_Data", "Invalid JSON string", NSError(domain: "Invalid_Data", code: 400, userInfo: nil))
+            print("❌ Invalid JSON string")
+            call.reject("Invalid_Data", "Invalid JSON string")
             return
         }
-        
+
         do {
-            if let configuration = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any] {
-                print(configuration)
-                self.cameraInitiate(configuration: configuration) { cameraResult in
-                    do {
-                        let cameraResultDict = cameraResult.toDictionary()
-                        if let mediaData = cameraResultDict["media"] as? [[String: Any]] {
-                            var sanitizedMediaData: [[String: Any]] = []
-                            
-                            for item in mediaData {
-                                var sanitizedItem: [String: Any] = [:]
-                                for (key, value) in item {
-                                    if key == "type" {
-                                        if (value as AnyObject).description == "TruvideoSdkCamera.TruvideoSdkCameraMediaType.photo"  {
-                                            sanitizedItem["type"] = "PICTURE"
-                                        } else {
-                                            sanitizedItem["type"] = "VIDEO"
-                                        }
-                                    }
-                                    if JSONSerialization.isValidJSONObject([key: value]) {
-                                        sanitizedItem[key] = value
-                                    } else if let value = value as? CustomStringConvertible {
-                                        sanitizedItem[key] = value.description
-                                    } else {
-                                        print("Skipping invalid JSON value for key: \(key)")
-                                    }
-                                }
-                                sanitizedMediaData.append(sanitizedItem)
+            guard let configuration = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any] else {
+                print("❌ Invalid JSON format")
+                call.reject("Invalid_JSON_Format", "Invalid JSON format")
+                return
+            }
+            
+            print("✅ Configuration parsed:", configuration)
+
+            self.cameraInitiate(configuration: configuration) { cameraResult in
+                let cameraResultDict = cameraResult.toDictionary()
+
+                if let mediaData = cameraResultDict["media"] as? [[String: Any]] {
+                    var sanitizedMediaData: [[String: Any]] = []
+
+                    for item in mediaData {
+                        var sanitizedItem: [String: Any] = [:]
+
+                        for (key, value) in item {
+                            if key == "type" {
+                                sanitizedItem["type"] = ((value as AnyObject).description == "TruvideoSdkCamera.TruvideoSdkCameraMediaType.photo") ? "PICTURE" : "VIDEO"
                             }
-                            if let jsonData = try? JSONSerialization.data(withJSONObject: sanitizedMediaData, options: []) {
-                                if let jsonString = String(data: jsonData, encoding: .utf8) {
-                                    print(jsonString)
-                                    //resolve(jsonString)
-                                }
+                            if JSONSerialization.isValidJSONObject([key: value]) {
+                                sanitizedItem[key] = value
+                            } else if let value = value as? CustomStringConvertible {
+                                sanitizedItem[key] = value.description
+                            } else {
+                                print("⚠️ Skipping invalid JSON value for key: \(key)")
                             }
                         }
-                    } catch {
-                        print("Error serializing camera result: \(error.localizedDescription)")
-                        //reject("Serialization_Error", "Error serializing camera result", error)
+                        sanitizedMediaData.append(sanitizedItem)
                     }
+
+                    if let jsonData = try? JSONSerialization.data(withJSONObject: sanitizedMediaData, options: []),
+                       let jsonString = String(data: jsonData, encoding: .utf8) {
+                        print("📤 Camera Result JSON:", jsonString)
+                        call.resolve(["mediaData": jsonString])
+                    } else {
+                        call.reject("Serialization_Error", "Failed to serialize camera result")
+                    }
+                } else {
+                    call.reject("Missing_Media_Data", "Media data not found in camera result")
                 }
-            } else {
-                print("Invalid JSON format")
-                //reject("Invalid_JSON_Format", "Invalid JSON format", NSError(domain: "Invalid_JSON_Format", code: 400, userInfo: nil))
             }
         } catch {
-            print("Error parsing JSON: \(error.localizedDescription)")
-            //reject("Error_parsing", "Error parsing JSON: \(error.localizedDescription)", error)
+            print("❌ JSON Parsing Error:", error.localizedDescription)
+            call.reject("Error_Parsing", "Error parsing JSON: \(error.localizedDescription)")
         }
-        
-        
-        
-        //        call.resolve([
-        //            "value": implementation.echo(value)
-        //        ])
     }
-    
+
+
     
     /**
      Initiates the camera functionality with specified parameters and presents the camera view.
@@ -104,9 +99,18 @@ public class TruvideoSdkCameraPlugin: CAPPlugin, CAPBridgedPlugin {
     
     private func cameraInitiate(configuration: [String:Any], completion: @escaping (_ cameraResult: TruvideoSdkCameraResult) -> Void) {
         DispatchQueue.main.async {
-            guard let rootViewController = UIApplication.shared.keyWindow?.rootViewController else {
-                print("E_NO_ROOT_VIEW_CONTROLLER", "No root view controller found")
-                return
+//            guard let rootViewController = UIApplication.shared.keyWindow?.rootViewController else {
+//                print("E_NO_ROOT_VIEW_CONTROLLER", "No root view controller found")
+//                return
+//            }
+            guard let rootViewController = UIApplication.shared
+                .connectedScenes
+                .compactMap({ $0 as? UIWindowScene }) // Get active scenes
+                .flatMap({ $0.windows }) // Get all windows
+                .first(where: { $0.isKeyWindow })? // Find key window
+                .rootViewController else {
+                    print("E_NO_ROOT_VIEW_CONTROLLER", "No root view controller found")
+                    return
             }
             guard let lensFacingString = configuration["lensFacing"] as? String,
                   let flashModeString = configuration["flashMode"] as? String,
