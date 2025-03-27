@@ -218,9 +218,11 @@ public class TruvideoSdkCameraPlugin: CAPPlugin, CAPBridgedPlugin {
                    let eventType = String(describing: cameraEvent.type) // Convert enum to string
                        
                    let eventData: [String: Any] = [
-                        "type": eventType,
-                        "createdAt": cameraEvent.createdAt.timeIntervalSince1970
-                   ]
+                        "cameraEvent": [ 
+                                "type": eventType,
+                                "createdAt": cameraEvent.createdAt.timeIntervalSince1970
+                        ]
+                    ]
                    self.notifyListeners("cameraEvent", data: eventData)
                }
                .store(in: &disposeBag)
