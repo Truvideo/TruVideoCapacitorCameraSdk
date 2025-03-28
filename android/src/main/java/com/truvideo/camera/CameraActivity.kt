@@ -18,6 +18,7 @@ import com.truvideo.sdk.camera.model.TruvideoSdkCameraOrientation
 import com.truvideo.sdk.camera.model.TruvideoSdkCameraResolution
 import com.truvideo.sdk.camera.ui.activities.camera.TruvideoSdkCameraContract
 import org.json.JSONObject
+import com.google.gson.Gson
 
 public class CameraActivity : ComponentActivity() {
     var configuration = ""
@@ -40,7 +41,7 @@ public class CameraActivity : ComponentActivity() {
         val cameraScreen = registerForActivityResult(TruvideoSdkCameraContract()){
             // result
             val ret = JSObject()
-            ret.put("result",it)
+            ret.put("result",Gson().toJson(it))
             TruvideoSdkCameraPlugin.pluginCall.resolve(ret)
             finish()
         }
@@ -55,7 +56,7 @@ public class CameraActivity : ComponentActivity() {
         TruvideoSdkCameraPlugin.mainBridge?.let {
             it.webView.post {
                 TruvideoSdkCameraPlugin.notifyJs.sendEventJS(eventName, com.getcapacitor.JSObject().apply {
-                    put("cameraEvent", eventData)
+                    put("cameraEvent", Gson().toJson(eventData))
                 })
             }
         }

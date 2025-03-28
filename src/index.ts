@@ -5,7 +5,3 @@ const TruvideoSdkCamera = registerPlugin<TruvideoSdkCameraPlugin>('TruvideoSdkCa
 
 export * from './definitions';
 export { TruvideoSdkCamera };
-
-
-
-

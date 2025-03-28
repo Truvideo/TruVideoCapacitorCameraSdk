@@ -25,7 +25,7 @@ import truvideo.sdk.common.exceptions.TruvideoSdkException;
 @CapacitorPlugin(name = "TruvideoSdkCamera")
 public class TruvideoSdkCameraPlugin extends Plugin implements NotifyJs {
 
-    private TruvideoSdkCamera implementation = new TruvideoSdkCamera();
+    // private TruvideoSdkCa  mera implementation = new TruvideoSdkCamera();
 
     static PluginCall pluginCall;
     static Bridge mainBridge;
