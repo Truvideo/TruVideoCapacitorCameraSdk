@@ -10,8 +10,6 @@ import com.getcapacitor.PluginCall;
 import com.getcapacitor.PluginMethod;
 import com.getcapacitor.annotation.CapacitorPlugin;
 import com.truvideo.camera.CameraActivity;
-import com.truvideo.sdk.core.TruvideoSdk;
-import com.truvideo.sdk.core.interfaces.TruvideoSdkCallback;
 
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
