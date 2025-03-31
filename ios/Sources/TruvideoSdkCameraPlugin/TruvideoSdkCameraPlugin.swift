@@ -74,7 +74,8 @@ public class TruvideoSdkCameraPlugin: CAPPlugin, CAPBridgedPlugin {
                     if let jsonData = try? JSONSerialization.data(withJSONObject: sanitizedMediaData, options: []),
                        let jsonString = String(data: jsonData, encoding: .utf8) {
                         print("📤 Camera Result JSON:", jsonString)
-                        call.resolve(["mediaData": jsonString])
+                        print("📤 Camera Result JSON:", sanitizedMediaData)
+                        call.resolve(["result": sanitizedMediaData])
                     } else {
                         call.reject("Serialization_Error", "Failed to serialize camera result")
                     }
