@@ -4,7 +4,7 @@ export default {
     {
       file: 'dist/plugin.js',
       format: 'iife',
-      name: 'capacitorCameraPlugin',
+      name: 'capacitorTruvideoSdkCamera',
       globals: {
         '@capacitor/core': 'capacitorExports',
       },

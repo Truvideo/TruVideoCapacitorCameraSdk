@@ -1,12 +1,12 @@
 {
   "api": {
-    "name": "CameraPluginPlugin",
-    "slug": "camerapluginplugin",
+    "name": "TruvideoSdkCameraPlugin",
+    "slug": "truvideosdkcameraplugin",
     "docs": "",
     "tags": [],
     "methods": [
       {
-        "name": "echo",
+        "name": "initCameraScreen",
         "signature": "(options: { value: string; }) => Promise<{ value: string; }>",
         "parameters": [
           {
@@ -19,7 +19,7 @@
         "tags": [],
         "docs": "",
         "complexTypes": [],
-        "slug": "echo"
+        "slug": "initcamerascreen"
       }
     ],
     "properties": []

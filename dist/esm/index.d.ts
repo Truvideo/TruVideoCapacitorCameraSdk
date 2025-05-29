@@ -1,4 +1,4 @@
-import type { CameraPluginPlugin } from './definitions';
-declare const CameraPlugin: CameraPluginPlugin;
+import type { TruvideoSdkCameraPlugin } from './definitions';
+declare const TruvideoSdkCamera: TruvideoSdkCameraPlugin;
 export * from './definitions';
-export { CameraPlugin };
+export { TruvideoSdkCamera };

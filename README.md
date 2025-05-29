@@ -1,6 +1,6 @@
 # truvideo-capacitor-camera-sdk
 
-Camera Plugin for Android and IOS
+camera module functionality of Truvideo video camera sdk
 
 ## Install
 
@@ -13,17 +13,17 @@ npx cap sync
 
 <docgen-index>
 
-* [`echo(...)`](#echo)
+* [`initCameraScreen(...)`](#initcamerascreen)
 
 </docgen-index>
 
 <docgen-api>
 <!--Update the source file JSDoc comments and rerun docgen to update the docs below-->
 
-### echo(...)
+### initCameraScreen(...)
 
 ```typescript
-echo(options: { value: string; }) => Promise<{ value: string; }>
+initCameraScreen(options: { value: string; }) => Promise<{ value: string; }>
 ```
 
 | Param         | Type                            |

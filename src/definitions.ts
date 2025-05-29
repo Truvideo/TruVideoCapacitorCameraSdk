@@ -1,3 +1,4 @@
-export interface CameraPluginPlugin {
-  echo(options: { value: string }): Promise<{ value: string }>;
+
+export interface TruvideoSdkCameraPlugin {
+  initCameraScreen(options: { value: string }): Promise<{ value: string }>;
 }

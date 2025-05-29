@@ -1,10 +1,7 @@
 import { registerPlugin } from '@capacitor/core';
 
-import type { CameraPluginPlugin } from './definitions';
-
-const CameraPlugin = registerPlugin<CameraPluginPlugin>('CameraPlugin', {
-  web: () => import('./web').then((m) => new m.CameraPluginWeb()),
-});
+import type { TruvideoSdkCameraPlugin } from './definitions';
+const TruvideoSdkCamera = registerPlugin<TruvideoSdkCameraPlugin>('TruvideoSdkCamera');
 
 export * from './definitions';
-export { CameraPlugin };
+export { TruvideoSdkCamera };
