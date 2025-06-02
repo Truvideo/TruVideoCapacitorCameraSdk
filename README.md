@@ -14,6 +14,8 @@ npx cap sync
 <docgen-index>
 
 * [`initCameraScreen(...)`](#initcamerascreen)
+* [`addListener('cameraEvent', ...)`](#addlistenercameraevent-)
+* [Interfaces](#interfaces)
 
 </docgen-index>
 
@@ -23,15 +25,41 @@ npx cap sync
 ### initCameraScreen(...)
 
 ```typescript
-initCameraScreen(options: { value: string; }) => Promise<{ value: string; }>
+initCameraScreen(options: { configuration: string; }) => Promise<{ result: string; }>
 ```
 
-| Param         | Type                            |
-| ------------- | ------------------------------- |
-| **`options`** | <code>{ value: string; }</code> |
+| Param         | Type                                    |
+| ------------- | --------------------------------------- |
+| **`options`** | <code>{ configuration: string; }</code> |
 
-**Returns:** <code>Promise&lt;{ value: string; }&gt;</code>
+**Returns:** <code>Promise&lt;{ result: string; }&gt;</code>
 
 --------------------
+
+
+### addListener('cameraEvent', ...)
+
+```typescript
+addListener(eventName: 'cameraEvent', listenerFunc: (event: { cameraEvent: { type: string; createdAt: number; }; }) => void) => PluginListenerHandle
+```
+
+| Param              | Type                                                                                    |
+| ------------------ | --------------------------------------------------------------------------------------- |
+| **`eventName`**    | <code>'cameraEvent'</code>                                                              |
+| **`listenerFunc`** | <code>(event: { cameraEvent: { type: string; createdAt: number; }; }) =&gt; void</code> |
+
+**Returns:** <code><a href="#pluginlistenerhandle">PluginListenerHandle</a></code>
+
+--------------------
+
+
+### Interfaces
+
+
+#### PluginListenerHandle
+
+| Prop         | Type                                      |
+| ------------ | ----------------------------------------- |
+| **`remove`** | <code>() =&gt; Promise&lt;void&gt;</code> |
 
 </docgen-api>

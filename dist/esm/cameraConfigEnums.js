@@ -1,32 +1,24 @@
-'use strict';
-
-var core = require('@capacitor/core');
-
-exports.LensFacing = void 0;
+export var LensFacing;
 (function (LensFacing) {
     LensFacing["Back"] = "back";
     LensFacing["Front"] = "front";
-})(exports.LensFacing || (exports.LensFacing = {}));
-exports.FlashMode = void 0;
+})(LensFacing || (LensFacing = {}));
+export var FlashMode;
 (function (FlashMode) {
     FlashMode["Off"] = "off";
     FlashMode["On"] = "on";
-})(exports.FlashMode || (exports.FlashMode = {}));
-exports.Orientation = void 0;
+})(FlashMode || (FlashMode = {}));
+export var Orientation;
 (function (Orientation) {
     Orientation["Portrait"] = "portrait";
     Orientation["LandscapeLeft"] = "landscapeLeft";
     Orientation["LandscapeRight"] = "landscapeRight";
     Orientation["PortraitReverse"] = "portraitReverse";
-})(exports.Orientation || (exports.Orientation = {}));
-exports.Mode = void 0;
+})(Orientation || (Orientation = {}));
+export var Mode;
 (function (Mode) {
     Mode["Video"] = "video";
     Mode["Picture"] = "picture";
     Mode["VideoAndPicture"] = "videoAndPicture";
-})(exports.Mode || (exports.Mode = {}));
-
-const TruvideoSdkCamera = core.registerPlugin('TruvideoSdkCamera');
-
-exports.TruvideoSdkCamera = TruvideoSdkCamera;
-//# sourceMappingURL=plugin.cjs.js.map
+})(Mode || (Mode = {}));
+//# sourceMappingURL=cameraConfigEnums.js.map

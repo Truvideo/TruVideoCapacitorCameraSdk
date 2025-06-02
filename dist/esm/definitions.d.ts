@@ -1,7 +1,14 @@
+import { PluginListenerHandle } from "@capacitor/core";
 export interface TruvideoSdkCameraPlugin {
     initCameraScreen(options: {
-        value: string;
+        configuration: string;
     }): Promise<{
-        value: string;
+        result: string;
     }>;
+    addListener(eventName: 'cameraEvent', listenerFunc: (event: {
+        cameraEvent: {
+            type: string;
+            createdAt: number;
+        };
+    }) => void): PluginListenerHandle;
 }

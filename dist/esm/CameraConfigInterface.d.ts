@@ -1,6 +1,5 @@
-import {LensFacing , FlashMode, Orientation, Mode } from './cameraConfigEnums'
-
-export interface CameraConfiguration  {
+import { LensFacing, FlashMode, Orientation, Mode } from './cameraConfigEnums';
+export interface CameraConfiguration {
     lensFacing: LensFacing;
     flashMode: FlashMode;
     orientation: Orientation;
@@ -10,5 +9,4 @@ export interface CameraConfiguration  {
     backResolutions: string[];
     backResolution: string;
     mode: Mode;
-  };
-  
+}
