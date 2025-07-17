@@ -1,29 +1,40 @@
-import {LensFacing , FlashMode, Orientation, Mode } from './cameraConfigEnums'
+import { LensFacing, FlashMode, Orientation, CameraMode } from './cameraConfigEnums'
 
-export interface CameraConfiguration  {
-    lensFacing: LensFacing;
-    flashMode: FlashMode;
-    orientation: Orientation;
-    outputPath: string;
-    frontResolutions: string[];
-    frontResolution: string;
-    backResolutions: string[];
-    backResolution: string;
-    mode: Mode;
-  };
+export interface CameraConfiguration {
+  lensFacing: LensFacing;
+  flashMode: FlashMode;
+  orientation: Orientation;
+  outputPath: string;
+  frontResolutions: string[];
+  frontResolution: string;
+  backResolutions: string[];
+  backResolution: string;
+  mode: CameraMode;
+};
 
+export interface Configuration {
+  lensFacing: LensFacing;
+  flashMode: FlashMode;
+  orientation: Orientation;
+  outputPath: string;
+  frontResolutions: Resolution[] | null;
+  frontResolution: Resolution | null;
+  backResolutions: Resolution[] | null;
+  backResolution: Resolution | null;
+  mode: string;
+}
 
+export interface Resolution {
+  width: number;
+  height: number;
+}
 
-//   const secretKey: CameraConfiguration  = {
-//     lensFacing: LensFacing.Front, //Front and Back option are there
-//     flashMode: FlashMode.Off,// On and Off option are there
-//     orientation: Orientation.Portrait, // Portrait, LandscapeLeft,LandscapeRight and PortraitReverse option are there
-//     outputPath: "file://\(outputPath)",
-//     frontResolutions: [],
-//     frontResolution: 'nil',
-//     backResolutions: [],
-//     backResolution: 'nil',
-//     mode: Mode.Picture, // Picture,Video and VideoAndPicture options are there
-//   };
-  
-  
+export interface ARCameraConfiguration {
+  outputPath: string;
+  mode: CameraMode;
+}
+
+export interface ARConfiguration {
+  outputPath: string;
+  mode: string;
+}
