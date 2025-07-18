@@ -2,6 +2,7 @@ import type { TruvideoSdkCameraPlugin } from './definitions';
 import { ARCameraConfiguration, CameraConfiguration } from './CameraConfig';
 declare const TruvideoSdkCamera: TruvideoSdkCameraPlugin;
 export * from './CameraConfig';
+export * from './cameraConfigEnums';
 export { TruvideoSdkCamera };
 export declare function initCameraScreen(configuration: CameraConfiguration): Promise<{
     value: string;

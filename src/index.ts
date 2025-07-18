@@ -5,6 +5,7 @@ import { ARCameraConfiguration, ARConfiguration, CameraConfiguration, Configurat
 const TruvideoSdkCamera = registerPlugin<TruvideoSdkCameraPlugin>('TruvideoSdkCamera');
 
 export * from './CameraConfig'
+export * from './cameraConfigEnums'
 export { TruvideoSdkCamera };
 
 export function initCameraScreen(
