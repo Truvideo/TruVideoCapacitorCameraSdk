@@ -5,10 +5,10 @@ export interface CameraConfiguration {
   flashMode: FlashMode;
   orientation: Orientation;
   outputPath: string;
-  frontResolutions: string[];
-  frontResolution: string;
-  backResolutions: string[];
-  backResolution: string;
+  frontResolutions: Resolution | null;
+  frontResolution: Resolution | null;
+  backResolutions: Resolution | null;
+  backResolution: Resolution | null;
   mode: CameraMode;
 };
 
@@ -17,9 +17,9 @@ export interface Configuration {
   flashMode: FlashMode;
   orientation: Orientation;
   outputPath: string;
-  frontResolutions: Resolution[] | null;
+  frontResolutions: Resolution | null;
   frontResolution: Resolution | null;
-  backResolutions: Resolution[] | null;
+  backResolutions: Resolution | null;
   backResolution: Resolution | null;
   mode: string;
 }
