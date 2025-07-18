@@ -14,6 +14,13 @@ npx cap sync
 <docgen-index>
 
 * [`initCameraScreen(...)`](#initcamerascreen)
+* [`initARCameraScreen(...)`](#initarcamerascreen)
+* [`initScanerScreen(...)`](#initscanerscreen)
+* [`version()`](#version)
+* [`environment()`](#environment)
+* [`isAugmentedRealityInstalled()`](#isaugmentedrealityinstalled)
+* [`isAugmentedRealitySupported()`](#isaugmentedrealitysupported)
+* [`requestInstallAugmentedReality()`](#requestinstallaugmentedreality)
 
 </docgen-index>
 
@@ -31,6 +38,91 @@ initCameraScreen(options: { value: string; }) => Promise<{ value: string; }>
 | **`options`** | <code>{ value: string; }</code> |
 
 **Returns:** <code>Promise&lt;{ value: string; }&gt;</code>
+
+--------------------
+
+
+### initARCameraScreen(...)
+
+```typescript
+initARCameraScreen(configuration: string) => Promise<string>
+```
+
+| Param               | Type                |
+| ------------------- | ------------------- |
+| **`configuration`** | <code>string</code> |
+
+**Returns:** <code>Promise&lt;string&gt;</code>
+
+--------------------
+
+
+### initScanerScreen(...)
+
+```typescript
+initScanerScreen(configuration: string) => Promise<string>
+```
+
+| Param               | Type                |
+| ------------------- | ------------------- |
+| **`configuration`** | <code>string</code> |
+
+**Returns:** <code>Promise&lt;string&gt;</code>
+
+--------------------
+
+
+### version()
+
+```typescript
+version() => Promise<string>
+```
+
+**Returns:** <code>Promise&lt;string&gt;</code>
+
+--------------------
+
+
+### environment()
+
+```typescript
+environment() => Promise<string>
+```
+
+**Returns:** <code>Promise&lt;string&gt;</code>
+
+--------------------
+
+
+### isAugmentedRealityInstalled()
+
+```typescript
+isAugmentedRealityInstalled() => Promise<string>
+```
+
+**Returns:** <code>Promise&lt;string&gt;</code>
+
+--------------------
+
+
+### isAugmentedRealitySupported()
+
+```typescript
+isAugmentedRealitySupported() => Promise<string>
+```
+
+**Returns:** <code>Promise&lt;string&gt;</code>
+
+--------------------
+
+
+### requestInstallAugmentedReality()
+
+```typescript
+requestInstallAugmentedReality() => Promise<string>
+```
+
+**Returns:** <code>Promise&lt;string&gt;</code>
 
 --------------------
 

@@ -20,6 +20,88 @@
         "docs": "",
         "complexTypes": [],
         "slug": "initcamerascreen"
+      },
+      {
+        "name": "initARCameraScreen",
+        "signature": "(configuration: string) => Promise<string>",
+        "parameters": [
+          {
+            "name": "configuration",
+            "docs": "",
+            "type": "string"
+          }
+        ],
+        "returns": "Promise<string>",
+        "tags": [],
+        "docs": "",
+        "complexTypes": [],
+        "slug": "initarcamerascreen"
+      },
+      {
+        "name": "initScanerScreen",
+        "signature": "(configuration: string) => Promise<string>",
+        "parameters": [
+          {
+            "name": "configuration",
+            "docs": "",
+            "type": "string"
+          }
+        ],
+        "returns": "Promise<string>",
+        "tags": [],
+        "docs": "",
+        "complexTypes": [],
+        "slug": "initscanerscreen"
+      },
+      {
+        "name": "version",
+        "signature": "() => Promise<string>",
+        "parameters": [],
+        "returns": "Promise<string>",
+        "tags": [],
+        "docs": "",
+        "complexTypes": [],
+        "slug": "version"
+      },
+      {
+        "name": "environment",
+        "signature": "() => Promise<string>",
+        "parameters": [],
+        "returns": "Promise<string>",
+        "tags": [],
+        "docs": "",
+        "complexTypes": [],
+        "slug": "environment"
+      },
+      {
+        "name": "isAugmentedRealityInstalled",
+        "signature": "() => Promise<string>",
+        "parameters": [],
+        "returns": "Promise<string>",
+        "tags": [],
+        "docs": "",
+        "complexTypes": [],
+        "slug": "isaugmentedrealityinstalled"
+      },
+      {
+        "name": "isAugmentedRealitySupported",
+        "signature": "() => Promise<string>",
+        "parameters": [],
+        "returns": "Promise<string>",
+        "tags": [],
+        "docs": "",
+        "complexTypes": [],
+        "slug": "isaugmentedrealitysupported"
+      },
+      {
+        "name": "requestInstallAugmentedReality",
+        "signature": "() => Promise<string>",
+        "parameters": [],
+        "returns": "Promise<string>",
+        "tags": [],
+        "docs": "",
+        "complexTypes": [],
+        "slug": "requestinstallaugmentedreality"
       }
     ],
     "properties": []
