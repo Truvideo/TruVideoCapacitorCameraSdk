@@ -2,8 +2,8 @@
 export interface TruvideoSdkCameraPlugin {
 
   initCameraScreen(options: { value: string }): Promise<{ value: string }>;
-  initARCameraScreen(configuration: string): Promise<string>;
-  initScanerScreen(configuration: string): Promise<string>;
+  initARCameraScreen(configuration: string): Promise<{ value: string }>;
+  initScanerScreen(configuration: string): Promise<{ value: string }>;
 
   version(): Promise<string>;
   environment(): Promise<string>;

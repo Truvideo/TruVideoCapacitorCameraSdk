@@ -30,7 +30,7 @@ export function initCameraScreen(
 
 export function initARCameraScreen(
     configuration: ARCameraConfiguration
-): Promise<string> {
+): Promise<{ value: string }> {
     let data = {
         mode: configuration.mode.mode,
         videoLimit: configuration.mode.videoLimit,
@@ -48,7 +48,7 @@ export function initARCameraScreen(
     );
 }
 
-export function initScanerScreen(): Promise<string> {
+export function initScanerScreen(): Promise<{ value: string }> {
     return TruvideoSdkCamera.initScanerScreen(
         JSON.stringify("")
     );
