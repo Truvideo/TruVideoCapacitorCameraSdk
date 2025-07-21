@@ -21,7 +21,7 @@ export interface Configuration {
   frontResolution: Resolution | null;
   backResolutions: Resolution | null;
   backResolution: Resolution | null;
-  mode: string;
+  mode: CameraMode;
 }
 
 export interface Resolution {

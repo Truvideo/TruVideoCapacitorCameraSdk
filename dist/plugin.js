@@ -69,14 +69,6 @@ var capacitorTruvideoSdkCamera = (function (exports, core) {
 
     const TruvideoSdkCamera = core.registerPlugin('TruvideoSdkCamera');
     function initCameraScreen(configuration) {
-        let data = {
-            mode: configuration.mode.mode,
-            videoLimit: configuration.mode.videoLimit,
-            imageLimit: configuration.mode.imageLimit,
-            mediaLimit: configuration.mode.mediaLimit,
-            videoDurationLimit: configuration.mode.videoDurationLimit,
-            autoClose: configuration.mode.autoClose,
-        };
         var cameraConfiguration = {
             lensFacing: configuration.lensFacing,
             flashMode: configuration.flashMode,
@@ -84,9 +76,9 @@ var capacitorTruvideoSdkCamera = (function (exports, core) {
             outputPath: configuration.outputPath,
             frontResolution: configuration.frontResolution,
             backResolution: configuration.backResolution,
-            frontResolutions: configuration.backResolution,
-            backResolutions: configuration.backResolution,
-            mode: JSON.stringify(data),
+            frontResolutions: configuration.frontResolutions,
+            backResolutions: configuration.backResolutions,
+            mode: configuration.mode
         };
         return TruvideoSdkCamera.initCameraScreen({
             value: JSON.stringify(cameraConfiguration)
