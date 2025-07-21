@@ -69,6 +69,7 @@ class CameraMode {
 }
 
 const TruvideoSdkCamera = core.registerPlugin('TruvideoSdkCamera');
+// export { TruvideoSdkCamera };
 function initCameraScreen(configuration) {
     var cameraConfiguration = {
         lensFacing: configuration.lensFacing,
@@ -120,7 +121,6 @@ function requestInstallAugmentedReality() {
 }
 
 exports.CameraMode = CameraMode;
-exports.TruvideoSdkCamera = TruvideoSdkCamera;
 exports.environment = environment;
 exports.initARCameraScreen = initARCameraScreen;
 exports.initCameraScreen = initCameraScreen;

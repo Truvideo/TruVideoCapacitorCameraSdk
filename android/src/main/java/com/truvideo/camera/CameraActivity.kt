@@ -53,9 +53,9 @@ public class CameraActivity : ComponentActivity() {
 
     fun startCamera(){
         val cameraScreen = registerForActivityResult(TruvideoSdkCameraContract()){
-            // result
+            // value
             val ret = JSObject()
-            ret.put("result",Gson().toJson(it))
+            ret.put("value",Gson().toJson(it))
             TruvideoSdkCameraPlugin.pluginCall.resolve(ret)
             finish()
         }
@@ -87,7 +87,7 @@ public class CameraActivity : ComponentActivity() {
     fun startAR(){
         var arScreen = registerForActivityResult(TruvideoSdkArCameraContract()){
             val ret = JSObject()
-            ret.put("result",Gson().toJson(it))
+            ret.put("value",Gson().toJson(it))
             TruvideoSdkCameraPlugin.pluginCall.resolve(ret)
             finish()
         }
@@ -165,7 +165,7 @@ public class CameraActivity : ComponentActivity() {
     fun startQR(){
         var qrScreen = registerForActivityResult(TruvideoSdkCameraScannerContract()){
             val ret = JSObject()
-            ret.put("result",it!!.data)
+            ret.put("value",it!!.data)
             TruvideoSdkCameraPlugin.pluginCall.resolve(ret)
             finish()
         }

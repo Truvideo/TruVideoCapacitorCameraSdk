@@ -33,7 +33,7 @@ public class TruvideoSdkCameraPlugin extends Plugin implements NotifyJs {
         pluginCall = call;
         mainBridge = bridge;
         notifyJs = this;
-        getContext().startActivity(new Intent(getContext(), CameraActivity.class).putExtra("from","camera").putExtra("configuration",call.getString("configuration")));
+        getContext().startActivity(new Intent(getContext(), CameraActivity.class).putExtra("from","camera").putExtra("configuration",call.getString("value")));
     }
 
     @PluginMethod
@@ -45,7 +45,7 @@ public class TruvideoSdkCameraPlugin extends Plugin implements NotifyJs {
         pluginCall = call;
         mainBridge = bridge;
         notifyJs = this;
-        getContext().startActivity(new Intent(getContext(), CameraActivity.class).putExtra("from","AR").putExtra("configuration",call.getString("configuration")));
+        getContext().startActivity(new Intent(getContext(), CameraActivity.class).putExtra("from","AR").putExtra("configuration",call.getString("value")));
     }
 
     @PluginMethod
@@ -53,7 +53,7 @@ public class TruvideoSdkCameraPlugin extends Plugin implements NotifyJs {
         pluginCall = call;
         mainBridge = bridge;
         notifyJs = this;
-        getContext().startActivity(new Intent(getContext(), CameraActivity.class).putExtra("from","QR").putExtra("configuration",call.getString("configuration")));
+        getContext().startActivity(new Intent(getContext(), CameraActivity.class).putExtra("from","QR").putExtra("configuration",call.getString("value")));
     }
 
     @PluginMethod

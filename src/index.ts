@@ -6,7 +6,7 @@ const TruvideoSdkCamera = registerPlugin<TruvideoSdkCameraPlugin>('TruvideoSdkCa
 
 export * from './CameraConfig'
 export * from './cameraConfigEnums'
-export { TruvideoSdkCamera };
+// export { TruvideoSdkCamera };
 
 export function initCameraScreen(
     configuration: CameraConfiguration
