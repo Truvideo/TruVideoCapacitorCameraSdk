@@ -16,15 +16,15 @@ public class TruvideoSdkCameraPlugin: CAPPlugin, CAPBridgedPlugin {
     private var disposeBag = Set<AnyCancellable>()
     
     public let pluginMethods: [CAPPluginMethod] = [
-        CAPPluginMethod(name: "initCameraScreen", returnType: CAPPluginReturnPromise)
-        CAPPluginMethod(name: "initARCameraScreen", returnType: CAPPluginReturnPromise)
-        CAPPluginMethod(name: "initScanerScreen", returnType: CAPPluginReturnPromise)
+        CAPPluginMethod(name: "initCameraScreen", returnType: CAPPluginReturnPromise),
+        CAPPluginMethod(name: "initARCameraScreen", returnType: CAPPluginReturnPromise),
+        CAPPluginMethod(name: "initScanerScreen", returnType: CAPPluginReturnPromise),
 
         CAPPluginMethod(name: "echo", returnType: CAPPluginReturnPromise),
-        CAPPluginMethod(name: "version", returnType: CAPPluginReturnPromise)
-        CAPPluginMethod(name: "environment", returnType: CAPPluginReturnPromise)
+        CAPPluginMethod(name: "version", returnType: CAPPluginReturnPromise),
+        CAPPluginMethod(name: "environment", returnType: CAPPluginReturnPromise),
         
-        CAPPluginMethod(name: "isAugmentedRealityInstalled", returnType: CAPPluginReturnPromise)
+        CAPPluginMethod(name: "isAugmentedRealityInstalled", returnType: CAPPluginReturnPromise),
         CAPPluginMethod(name: "isAugmentedRealitySupported", returnType: CAPPluginReturnPromise)
         
     ]

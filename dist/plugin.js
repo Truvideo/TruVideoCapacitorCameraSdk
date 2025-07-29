@@ -68,24 +68,6 @@ var capacitorTruvideoSdkCamera = (function (exports, core) {
     }
 
     const TruvideoSdkCamera = core.registerPlugin('TruvideoSdkCamera');
-    // export function initCameraScreen(
-    //     configuration: CameraConfiguration
-    // ): Promise<{ value: string }> {
-    //     var cameraConfiguration: Configuration = {
-    //         lensFacing: configuration.lensFacing,
-    //         flashMode: configuration.flashMode,
-    //         orientation: configuration.orientation,
-    //         outputPath: configuration.outputPath,
-    //         frontResolution: configuration.frontResolution,
-    //         backResolution: configuration.backResolution,
-    //         frontResolutions: configuration.frontResolutions,
-    //         backResolutions: configuration.backResolutions,
-    //         mode: configuration.mode
-    //     }
-    //     return TruvideoSdkCamera.initCameraScreen({
-    //         value: JSON.stringify(cameraConfiguration)
-    //     });
-    // }
     function cleanObject(obj) {
         return Object.fromEntries(Object.entries(obj).filter(([_, v]) => v !== null && v !== undefined));
     }
