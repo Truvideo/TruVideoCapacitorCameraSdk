@@ -30,14 +30,14 @@ npx cap sync
 ### initCameraScreen(...)
 
 ```typescript
-initCameraScreen(options: { value: string; }) => Promise<{ value: string; }>
+initCameraScreen(options: { configuration: string; }) => Promise<{ result: string; }>
 ```
 
-| Param         | Type                            |
-| ------------- | ------------------------------- |
-| **`options`** | <code>{ value: string; }</code> |
+| Param         | Type                                    |
+| ------------- | --------------------------------------- |
+| **`options`** | <code>{ configuration: string; }</code> |
 
-**Returns:** <code>Promise&lt;{ value: string; }&gt;</code>
+**Returns:** <code>Promise&lt;{ result: string; }&gt;</code>
 
 --------------------
 
