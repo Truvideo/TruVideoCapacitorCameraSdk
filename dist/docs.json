@@ -7,15 +7,15 @@
     "methods": [
       {
         "name": "initCameraScreen",
-        "signature": "(options: { configuration: string; }) => Promise<{ result: string; }>",
+        "signature": "(options: { value: string; }) => Promise<{ value: string; }>",
         "parameters": [
           {
             "name": "options",
             "docs": "",
-            "type": "{ configuration: string; }"
+            "type": "{ value: string; }"
           }
         ],
-        "returns": "Promise<{ result: string; }>",
+        "returns": "Promise<{ value: string; }>",
         "tags": [],
         "docs": "",
         "complexTypes": [],
@@ -106,24 +106,7 @@
     ],
     "properties": []
   },
-  "interfaces": [
-    {
-      "name": "PluginListenerHandle",
-      "slug": "pluginlistenerhandle",
-      "docs": "",
-      "tags": [],
-      "methods": [],
-      "properties": [
-        {
-          "name": "remove",
-          "tags": [],
-          "docs": "",
-          "complexTypes": [],
-          "type": "() => Promise<void>"
-        }
-      ]
-    }
-  ],
+  "interfaces": [],
   "enums": [],
   "typeAliases": [],
   "pluginConfigs": []

@@ -1,9 +1,8 @@
-import { PluginListenerHandle } from "@capacitor/core";
 export interface TruvideoSdkCameraPlugin {
     initCameraScreen(options: {
-        configuration: string;
+        value: string;
     }): Promise<{
-        result: string;
+        value: string;
     }>;
     initARCameraScreen(configuration: string): Promise<{
         value: string;
