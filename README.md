@@ -14,8 +14,13 @@ npx cap sync
 <docgen-index>
 
 * [`initCameraScreen(...)`](#initcamerascreen)
-* [`addListener('cameraEvent', ...)`](#addlistenercameraevent-)
-* [Interfaces](#interfaces)
+* [`initARCameraScreen(...)`](#initarcamerascreen)
+* [`initScanerScreen(...)`](#initscanerscreen)
+* [`version()`](#version)
+* [`environment()`](#environment)
+* [`isAugmentedRealityInstalled()`](#isaugmentedrealityinstalled)
+* [`isAugmentedRealitySupported()`](#isaugmentedrealitysupported)
+* [`requestInstallAugmentedReality()`](#requestinstallaugmentedreality)
 
 </docgen-index>
 
@@ -25,41 +30,100 @@ npx cap sync
 ### initCameraScreen(...)
 
 ```typescript
-initCameraScreen(options: { configuration: string; }) => Promise<{ result: string; }>
+initCameraScreen(options: { value: string; }) => Promise<{ value: string; }>
 ```
 
-| Param         | Type                                    |
-| ------------- | --------------------------------------- |
-| **`options`** | <code>{ configuration: string; }</code> |
+| Param         | Type                            |
+| ------------- | ------------------------------- |
+| **`options`** | <code>{ value: string; }</code> |
 
-**Returns:** <code>Promise&lt;{ result: string; }&gt;</code>
+**Returns:** <code>Promise&lt;{ value: string; }&gt;</code>
 
 --------------------
 
 
-### addListener('cameraEvent', ...)
+### initARCameraScreen(...)
 
 ```typescript
-addListener(eventName: 'cameraEvent', listenerFunc: (event: { cameraEvent: { type: string; createdAt: number; }; }) => void) => PluginListenerHandle
+initARCameraScreen(configuration: string) => Promise<{ value: string; }>
 ```
 
-| Param              | Type                                                                                    |
-| ------------------ | --------------------------------------------------------------------------------------- |
-| **`eventName`**    | <code>'cameraEvent'</code>                                                              |
-| **`listenerFunc`** | <code>(event: { cameraEvent: { type: string; createdAt: number; }; }) =&gt; void</code> |
+| Param               | Type                |
+| ------------------- | ------------------- |
+| **`configuration`** | <code>string</code> |
 
-**Returns:** <code><a href="#pluginlistenerhandle">PluginListenerHandle</a></code>
+**Returns:** <code>Promise&lt;{ value: string; }&gt;</code>
 
 --------------------
 
 
-### Interfaces
+### initScanerScreen(...)
+
+```typescript
+initScanerScreen(configuration: string) => Promise<{ value: string; }>
+```
+
+| Param               | Type                |
+| ------------------- | ------------------- |
+| **`configuration`** | <code>string</code> |
+
+**Returns:** <code>Promise&lt;{ value: string; }&gt;</code>
+
+--------------------
 
 
-#### PluginListenerHandle
+### version()
 
-| Prop         | Type                                      |
-| ------------ | ----------------------------------------- |
-| **`remove`** | <code>() =&gt; Promise&lt;void&gt;</code> |
+```typescript
+version() => Promise<string>
+```
+
+**Returns:** <code>Promise&lt;string&gt;</code>
+
+--------------------
+
+
+### environment()
+
+```typescript
+environment() => Promise<string>
+```
+
+**Returns:** <code>Promise&lt;string&gt;</code>
+
+--------------------
+
+
+### isAugmentedRealityInstalled()
+
+```typescript
+isAugmentedRealityInstalled() => Promise<string>
+```
+
+**Returns:** <code>Promise&lt;string&gt;</code>
+
+--------------------
+
+
+### isAugmentedRealitySupported()
+
+```typescript
+isAugmentedRealitySupported() => Promise<string>
+```
+
+**Returns:** <code>Promise&lt;string&gt;</code>
+
+--------------------
+
+
+### requestInstallAugmentedReality()
+
+```typescript
+requestInstallAugmentedReality() => Promise<string>
+```
+
+**Returns:** <code>Promise&lt;string&gt;</code>
+
+--------------------
 
 </docgen-api>

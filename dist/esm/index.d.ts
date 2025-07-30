@@ -1,6 +1,17 @@
-import type { TruvideoSdkCameraPlugin } from './definitions';
-declare const TruvideoSdkCamera: TruvideoSdkCameraPlugin;
-export * from './definitions';
-export * from './CameraConfigInterface';
+import { ARCameraConfiguration, CameraConfiguration } from './CameraConfig';
+export * from './CameraConfig';
 export * from './cameraConfigEnums';
-export { TruvideoSdkCamera };
+export declare function initCameraScreen(configuration: CameraConfiguration): Promise<{
+    value: string;
+}>;
+export declare function initARCameraScreen(configuration: ARCameraConfiguration): Promise<{
+    value: string;
+}>;
+export declare function initScanerScreen(): Promise<{
+    value: string;
+}>;
+export declare function version(): Promise<string>;
+export declare function environment(): Promise<string>;
+export declare function isAugmentedRealityInstalled(): Promise<string>;
+export declare function isAugmentedRealitySupported(): Promise<string>;
+export declare function requestInstallAugmentedReality(): Promise<string>;

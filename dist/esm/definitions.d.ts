@@ -1,14 +1,18 @@
-import { PluginListenerHandle } from "@capacitor/core";
 export interface TruvideoSdkCameraPlugin {
     initCameraScreen(options: {
-        configuration: string;
+        value: string;
     }): Promise<{
-        result: string;
+        value: string;
     }>;
-    addListener(eventName: 'cameraEvent', listenerFunc: (event: {
-        cameraEvent: {
-            type: string;
-            createdAt: number;
-        };
-    }) => void): PluginListenerHandle;
+    initARCameraScreen(configuration: string): Promise<{
+        value: string;
+    }>;
+    initScanerScreen(configuration: string): Promise<{
+        value: string;
+    }>;
+    version(): Promise<string>;
+    environment(): Promise<string>;
+    isAugmentedRealityInstalled(): Promise<string>;
+    isAugmentedRealitySupported(): Promise<string>;
+    requestInstallAugmentedReality(): Promise<string>;
 }

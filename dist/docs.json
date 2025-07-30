@@ -7,64 +7,106 @@
     "methods": [
       {
         "name": "initCameraScreen",
-        "signature": "(options: { configuration: string; }) => Promise<{ result: string; }>",
+        "signature": "(options: { value: string; }) => Promise<{ value: string; }>",
         "parameters": [
           {
             "name": "options",
             "docs": "",
-            "type": "{ configuration: string; }"
+            "type": "{ value: string; }"
           }
         ],
-        "returns": "Promise<{ result: string; }>",
+        "returns": "Promise<{ value: string; }>",
         "tags": [],
         "docs": "",
         "complexTypes": [],
         "slug": "initcamerascreen"
       },
       {
-        "name": "addListener",
-        "signature": "(eventName: 'cameraEvent', listenerFunc: (event: { cameraEvent: { type: string; createdAt: number; }; }) => void) => PluginListenerHandle",
+        "name": "initARCameraScreen",
+        "signature": "(configuration: string) => Promise<{ value: string; }>",
         "parameters": [
           {
-            "name": "eventName",
+            "name": "configuration",
             "docs": "",
-            "type": "'cameraEvent'"
-          },
-          {
-            "name": "listenerFunc",
-            "docs": "",
-            "type": "(event: { cameraEvent: { type: string; createdAt: number; }; }) => void"
+            "type": "string"
           }
         ],
-        "returns": "PluginListenerHandle",
+        "returns": "Promise<{ value: string; }>",
         "tags": [],
         "docs": "",
-        "complexTypes": [
-          "PluginListenerHandle"
+        "complexTypes": [],
+        "slug": "initarcamerascreen"
+      },
+      {
+        "name": "initScanerScreen",
+        "signature": "(configuration: string) => Promise<{ value: string; }>",
+        "parameters": [
+          {
+            "name": "configuration",
+            "docs": "",
+            "type": "string"
+          }
         ],
-        "slug": "addlistenercameraevent-"
+        "returns": "Promise<{ value: string; }>",
+        "tags": [],
+        "docs": "",
+        "complexTypes": [],
+        "slug": "initscanerscreen"
+      },
+      {
+        "name": "version",
+        "signature": "() => Promise<string>",
+        "parameters": [],
+        "returns": "Promise<string>",
+        "tags": [],
+        "docs": "",
+        "complexTypes": [],
+        "slug": "version"
+      },
+      {
+        "name": "environment",
+        "signature": "() => Promise<string>",
+        "parameters": [],
+        "returns": "Promise<string>",
+        "tags": [],
+        "docs": "",
+        "complexTypes": [],
+        "slug": "environment"
+      },
+      {
+        "name": "isAugmentedRealityInstalled",
+        "signature": "() => Promise<string>",
+        "parameters": [],
+        "returns": "Promise<string>",
+        "tags": [],
+        "docs": "",
+        "complexTypes": [],
+        "slug": "isaugmentedrealityinstalled"
+      },
+      {
+        "name": "isAugmentedRealitySupported",
+        "signature": "() => Promise<string>",
+        "parameters": [],
+        "returns": "Promise<string>",
+        "tags": [],
+        "docs": "",
+        "complexTypes": [],
+        "slug": "isaugmentedrealitysupported"
+      },
+      {
+        "name": "requestInstallAugmentedReality",
+        "signature": "() => Promise<string>",
+        "parameters": [],
+        "returns": "Promise<string>",
+        "tags": [],
+        "docs": "",
+        "complexTypes": [],
+        "slug": "requestinstallaugmentedreality"
       }
     ],
     "properties": []
   },
-  "interfaces": [
-    {
-      "name": "PluginListenerHandle",
-      "slug": "pluginlistenerhandle",
-      "docs": "",
-      "tags": [],
-      "methods": [],
-      "properties": [
-        {
-          "name": "remove",
-          "tags": [],
-          "docs": "",
-          "complexTypes": [],
-          "type": "() => Promise<void>"
-        }
-      ]
-    }
-  ],
+  "interfaces": [],
   "enums": [],
   "typeAliases": [],
   "pluginConfigs": []
