@@ -44,7 +44,7 @@ export class CameraMode {
     mediaCount?: number,
   ): CameraMode {
     return new CameraMode(
-      'singleMedia',
+      'videoAndImage',
       null,
       null,
       mediaCount ?? null,
