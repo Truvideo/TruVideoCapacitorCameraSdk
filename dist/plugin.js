@@ -34,7 +34,7 @@ var capacitorTruvideoSdkCamera = (function (exports, core) {
             this.autoClose = autoClose;
         }
         static singleMedia(durationLimit, mediaCount) {
-            return new CameraMode('singleMedia', null, null, mediaCount !== null && mediaCount !== void 0 ? mediaCount : null, durationLimit !== null && durationLimit !== void 0 ? durationLimit : null, false);
+            return new CameraMode('videoAndImage', null, null, mediaCount !== null && mediaCount !== void 0 ? mediaCount : null, durationLimit !== null && durationLimit !== void 0 ? durationLimit : null, false);
         }
         static videoAndImage(durationLimit, videoMaxCount, imageMaxCount) {
             return new CameraMode('videoAndImage', videoMaxCount !== null && videoMaxCount !== void 0 ? videoMaxCount : null, imageMaxCount !== null && imageMaxCount !== void 0 ? imageMaxCount : null, null, durationLimit !== null && durationLimit !== void 0 ? durationLimit : null, false);
