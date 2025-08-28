@@ -27,9 +27,11 @@ export interface Resolution {
 }
 export interface ARCameraConfiguration {
     outputPath: string;
+    orientation: Orientation;
     mode: CameraMode;
 }
 export interface ARConfiguration {
     outputPath: string;
+    orientation: Orientation;
     mode: string;
 }

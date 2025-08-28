@@ -32,6 +32,7 @@ export function initARCameraScreen(configuration) {
     };
     var cameraConfiguration = {
         outputPath: configuration.outputPath,
+        orientation: configuration.orientation,
         mode: JSON.stringify(data),
     };
     return TruvideoSdkCamera.initARCameraScreen(JSON.stringify(cameraConfiguration));
