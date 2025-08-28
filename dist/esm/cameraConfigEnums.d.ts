@@ -20,10 +20,10 @@ export declare class CameraMode {
     videoDurationLimit: string;
     autoClose: boolean;
     private constructor();
-    static singleMedia(): CameraMode;
-    static singleMedia(durationLimit?: number, mediaCount?: number): CameraMode;
+    static singleMedia(mediaCount: number): CameraMode;
+    static singleMedia(mediaCount: number, durationLimit?: number): CameraMode;
     static videoAndImage(): CameraMode;
-    static videoAndImage(durationLimit?: number, videoMaxCount?: number, imageMaxCount?: number): CameraMode;
+    static videoAndImage(videoMaxCount?: number, imageMaxCount?: number, durationLimit?: number): CameraMode;
     getJson(): string;
     static singleVideo(): CameraMode;
     static singleVideo(durationLimit?: number): CameraMode;

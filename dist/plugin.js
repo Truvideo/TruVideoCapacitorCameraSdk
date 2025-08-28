@@ -33,10 +33,10 @@ var capacitorTruvideoSdkCamera = (function (exports, core) {
             this.videoDurationLimit = videoDurationLimit != null ? videoDurationLimit.toString() : "";
             this.autoClose = autoClose;
         }
-        static singleMedia(durationLimit, mediaCount) {
+        static singleMedia(mediaCount, durationLimit) {
             return new CameraMode('videoAndImage', null, null, mediaCount !== null && mediaCount !== void 0 ? mediaCount : null, durationLimit !== null && durationLimit !== void 0 ? durationLimit : null, false);
         }
-        static videoAndImage(durationLimit, videoMaxCount, imageMaxCount) {
+        static videoAndImage(videoMaxCount, imageMaxCount, durationLimit) {
             return new CameraMode('videoAndImage', videoMaxCount !== null && videoMaxCount !== void 0 ? videoMaxCount : null, imageMaxCount !== null && imageMaxCount !== void 0 ? imageMaxCount : null, null, durationLimit !== null && durationLimit !== void 0 ? durationLimit : null, false);
         }
         getJson() {
@@ -98,6 +98,7 @@ var capacitorTruvideoSdkCamera = (function (exports, core) {
         };
         var cameraConfiguration = {
             outputPath: configuration.outputPath,
+            orientation: configuration.orientation,
             mode: JSON.stringify(data),
         };
         return TruvideoSdkCamera.initARCameraScreen(JSON.stringify(cameraConfiguration));

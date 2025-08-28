@@ -13,4 +13,5 @@ const secretKey  = {
 };
 window.testEcho = () => {
     TruvideoSdkCamera.initCameraScreen({ configuration: JSON.stringify(secretKey) })
+
 }

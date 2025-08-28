@@ -160,82 +160,70 @@ public class TruvideoSdkCameraPlugin: CAPPlugin, CAPBridgedPlugin {
             call.reject("Invalid_Data", "Invalid JSON string", NSError(domain: "Invalid_Data", code: 400, userInfo: nil))
             return
         }
+        var orientation: TruvideoSdkCameraOrientation? = nil
         var mode: TruvideoSdkCameraMediaMode = .videoAndPicture()
         do{
             if let jsonConfig = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any] {
                 let modeString = jsonConfig["mode"] as? String;
+                let orientationString = jsonConfig["orientation"] as? String;
                 guard let data = modeString?.data(using: .utf8) else { return }
                 let modeData = try JSONSerialization.jsonObject(with: data, options: []) as! [String: Any]
                 let mainMode  = modeData["mode"] as? String;
+                let videoDurationLimit : String? = (modeData["videoDurationLimit"] as? String).flatMap { $0.isEmpty ? nil : $0 }
+                let mediaLimit : String? = (modeData["mediaLimit"] as? String).flatMap { $0.isEmpty ? nil : $0 }
+                let videoLimit : String? = (modeData["videoLimit"] as? String).flatMap { $0.isEmpty ? nil : $0 }
+                let imageLimit : String? = (modeData["imageLimit"] as? String).flatMap { $0.isEmpty ? nil : $0 }
+                
+                switch orientationString {
+                case "portrait":
+                    orientation = .portrait
+                case "portraitReverse":
+                    orientation = .portraitReverse
+                case "landscapeLeft":
+                    orientation = .landscapeLeft
+                case "landscapeRight":
+                    orientation = .landscapeRight
+                default:
+                    print("Unknown orientation:", orientationString)
+                    return
+                }
                 switch mainMode {
                 case "videoAndImage":
-                    if let videoDurationLimitStr = modeData["videoDurationLimit"] as? String,
-                       let mediaLimitStr = modeData["mediaLimit"] as? String,
-                       !videoDurationLimitStr.isEmpty, !mediaLimitStr.isEmpty,
-                       let durationLimit = Int(videoDurationLimitStr),
-                       let maxCount = Int(mediaLimitStr) {
-                        mode = .videoAndPicture(mediaCount: maxCount, videoDuration: durationLimit)
-                    } else if let videoLimitStr = modeData["videoLimit"] as? String,
-                              let imageLimitStr = modeData["imageLimit"] as? String,
-                              let videoDurationLimitStr = modeData["videoDurationLimit"] as? String,
-                              !videoLimitStr.isEmpty, !imageLimitStr.isEmpty, !videoDurationLimitStr.isEmpty,
-                              let videoMaxCount = Int(videoLimitStr),
-                              let imageMaxCount = Int(imageLimitStr),
-                              let durationLimit = Int(videoDurationLimitStr) {
-                        mode = .videoAndPicture(videoCount: videoMaxCount,pictureCount: imageMaxCount,videoDuration: durationLimit)
-                    } else if let videoDurationLimitStr = modeData["videoDurationLimit"] as? String,
-                              !videoDurationLimitStr.isEmpty,
-                              let durationLimit = Int(videoDurationLimitStr) {
-                        mode = .videoAndPicture(videoDuration: durationLimit)
-                    } else {
-                        mode = .videoAndPicture()
-                    }
-                    
+                  if videoLimit != nil || imageLimit != nil {
+                    mode = .videoAndPicture(
+                      videoCount: videoLimit.flatMap { Int($0) },
+                      pictureCount: imageLimit.flatMap { Int($0) },
+                      videoDuration: videoDurationLimit.flatMap { Int($0) }
+                    )
+                  }else if mediaLimit != nil {
+                    let mediaLimitInt = Int(mediaLimit ?? "0") ?? 0
+                    mode = .videoAndPicture(
+                      mediaCount: mediaLimitInt,
+                      videoDuration: videoDurationLimit.flatMap { Int($0) }
+                    )
+                  }else {
+                    mode = .videoAndPicture()
+                  }
                 case "video":
-                    if let videoLimitStr = modeData["videoLimit"] as? String,
-                       let videoDurationLimitStr = modeData["videoDurationLimit"] as? String,
-                       !videoLimitStr.isEmpty, !videoDurationLimitStr.isEmpty,
-                       let maxCount = Int(videoLimitStr),
-                       let durationLimit = Int(videoDurationLimitStr) {
-                        mode = .video(videoCount:  maxCount, videoDuration: durationLimit)
-                    } else if let videoLimitStr = modeData["videoLimit"] as? String,
-                              !videoLimitStr.isEmpty,
-                              let maxCount = Int(videoLimitStr) {
-                        mode = .video(videoCount: maxCount)
-                    } else {
-                        mode = .video()
-                    }
-                    
+                  mode = .video(
+                    videoCount :videoLimit.flatMap { Int($0) },
+                    videoDuration: videoDurationLimit.flatMap { Int($0) }
+                  )
                 case "image":
-                    if let imageLimitStr = modeData["imageLimit"] as? String,
-                       !imageLimitStr.isEmpty,
-                       let maxCount = Int(imageLimitStr) {
-                        mode = .picture(pictureCount: maxCount)
-                    } else {
-                        mode = .picture()
-                    }
-                    
+                  mode = .picture(
+                    pictureCount :imageLimit.flatMap { Int($0) }
+                  )
                 case "singleImage":
                     mode = .singlePicture()
-                    
                 case "singleVideo":
-                    if let videoDurationLimitStr = modeData["videoDurationLimit"] as? String,
-                       !videoDurationLimitStr.isEmpty,
-                       let durationLimit = Int(videoDurationLimitStr) {
-                        mode = .singleVideo(videoDuration: durationLimit)
-                    } else {
-                        mode = .singleVideo()
-                    }
-                    
+                  mode = .singleVideo(
+                    videoDuration : videoDurationLimit.flatMap { Int($0) }
+                  )
                 case "singleVideoOrImage":
-                    if let videoDurationLimitStr = modeData["videoDurationLimit"] as? String,
-                       !videoDurationLimitStr.isEmpty,
-                       let durationLimit = Int(videoDurationLimitStr) {
-                        mode = .singleVideoOrPicture(videoDuration: durationLimit)
-                    } else {
-                        mode = .singleVideoOrPicture()
-                    }
-                    
+                  mode = .singleVideoOrPicture(
+                    videoDuration : videoDurationLimit.flatMap { Int($0) }
+                  )
+ 
                 default:
                     break
                 }
@@ -244,7 +232,7 @@ public class TruvideoSdkCameraPlugin: CAPPlugin, CAPBridgedPlugin {
             
         }
         
-        initiateARCamera(viewController: rootViewController,mode : mode){cameraResult in
+        initiateARCamera(viewController: rootViewController,mode : mode, orientation : orientation){cameraResult in
             do {
                 let cameraResultDict = cameraResult.toDictionary()
                 if let mediaData = cameraResultDict["media"] as? [[String: Any]] {
@@ -287,12 +275,15 @@ public class TruvideoSdkCameraPlugin: CAPPlugin, CAPBridgedPlugin {
         }
         
     }
-    func initiateARCamera(viewController: UIViewController,mode : TruvideoSdkCameraMediaMode,  completion: @escaping (_ cameraResult: TruvideoSdkCameraResult) -> Void)  {
+    func initiateARCamera(viewController: UIViewController,
+                          mode : TruvideoSdkCameraMediaMode,
+                          orientation :TruvideoSdkCameraOrientation?,
+                          completion: @escaping (_ cameraResult: TruvideoSdkCameraResult) -> Void)  {
         DispatchQueue.main.async {
             // Retrieving information about the device's camera functionality.
             let cameraInfo: TruvideoSdkCameraInformation = TruvideoSdkCamera.camera.getTruvideoSdkCameraInformation()
             print("Camera Info:", cameraInfo)
-            let configuration = TruvideoSdkARCameraConfiguration(flashMode: .on,mode: mode)
+            let configuration = TruvideoSdkARCameraConfiguration(flashMode: .on,mode: mode, orientation: orientation)
             DispatchQueue.main.async {
                 self.subscribeToCameraEvents()
                 viewController.presentTruvideoSdkARCameraView(preset: configuration, onComplete: { result in
@@ -375,75 +366,47 @@ public class TruvideoSdkCameraPlugin: CAPPlugin, CAPBridgedPlugin {
             
             do {
                 let mainMode  = modeString["mode"] as? String;
+                let videoDurationLimit : String? = (modeString["videoDurationLimit"] as? String).flatMap { $0.isEmpty ? nil : $0 }
+                let mediaLimit : String? = (modeString["mediaLimit"] as? String).flatMap { $0.isEmpty ? nil : $0 }
+                let videoLimit : String? = (modeString["videoLimit"] as? String).flatMap { $0.isEmpty ? nil : $0 }
+                let imageLimit : String? = (modeString["imageLimit"] as? String).flatMap { $0.isEmpty ? nil : $0 }
                 switch mainMode {
                 case "videoAndImage":
-                    if let videoDurationLimitStr = modeString["videoDurationLimit"] as? String,
-                       let mediaLimitStr = modeString["mediaLimit"] as? String,
-                       !videoDurationLimitStr.isEmpty, !mediaLimitStr.isEmpty,
-                       let durationLimit = Int(videoDurationLimitStr),
-                       let maxCount = Int(mediaLimitStr) {
-                        mode = .videoAndPicture(mediaCount: maxCount, videoDuration: durationLimit)
-                    } else if let videoLimitStr = modeString["videoLimit"] as? String,
-                              let imageLimitStr = modeString["imageLimit"] as? String,
-                              let videoDurationLimitStr = modeString["videoDurationLimit"] as? String,
-                              !videoLimitStr.isEmpty, !imageLimitStr.isEmpty, !videoDurationLimitStr.isEmpty,
-                              let videoMaxCount = Int(videoLimitStr),
-                              let imageMaxCount = Int(imageLimitStr),
-                              let durationLimit = Int(videoDurationLimitStr) {
-                        mode = .videoAndPicture(videoCount: videoMaxCount,pictureCount: imageMaxCount,videoDuration: durationLimit)
-                    } else if let videoDurationLimitStr = modeString["videoDurationLimit"] as? String,
-                              !videoDurationLimitStr.isEmpty,
-                              let durationLimit = Int(videoDurationLimitStr) {
-                        mode = .videoAndPicture(videoDuration: durationLimit)
-                    } else {
-                        mode = .videoAndPicture()
-                    }
-                    
+                  if videoLimit != nil || imageLimit != nil {
+                    mode = .videoAndPicture(
+                      videoCount: videoLimit.flatMap { Int($0) },
+                      pictureCount: imageLimit.flatMap { Int($0) },
+                      videoDuration: videoDurationLimit.flatMap { Int($0) }
+                    )
+                  }else if mediaLimit != nil {
+                    let mediaLimitInt = Int(mediaLimit ?? "0") ?? 0
+                    mode = .videoAndPicture(
+                      mediaCount: mediaLimitInt,
+                      videoDuration: videoDurationLimit.flatMap { Int($0) }
+                    )
+                  }else {
+                    mode = .videoAndPicture()
+                  }
                 case "video":
-                    if let videoLimitStr = modeString["videoLimit"] as? String,
-                       let videoDurationLimitStr = modeString["videoDurationLimit"] as? String,
-                       !videoLimitStr.isEmpty, !videoDurationLimitStr.isEmpty,
-                       let maxCount = Int(videoLimitStr),
-                       let durationLimit = Int(videoDurationLimitStr) {
-                        mode = .video(videoCount:  maxCount, videoDuration: durationLimit)
-                    } else if let videoLimitStr = modeString["videoLimit"] as? String,
-                              !videoLimitStr.isEmpty,
-                              let maxCount = Int(videoLimitStr) {
-                        mode = .video(videoCount: maxCount)
-                    } else {
-                        mode = .video()
-                    }
-                    
+                  mode = .video(
+                    videoCount :videoLimit.flatMap { Int($0) },
+                    videoDuration: videoDurationLimit.flatMap { Int($0) }
+                  )
                 case "image":
-                    if let imageLimitStr = modeString["imageLimit"] as? String,
-                       !imageLimitStr.isEmpty,
-                       let maxCount = Int(imageLimitStr) {
-                        mode = .picture(pictureCount: maxCount)
-                    } else {
-                        mode = .picture()
-                    }
-                    
+                  mode = .picture(
+                    pictureCount :imageLimit.flatMap { Int($0) }
+                  )
                 case "singleImage":
                     mode = .singlePicture()
-                    
                 case "singleVideo":
-                    if let videoDurationLimitStr = modeString["videoDurationLimit"] as? String,
-                       !videoDurationLimitStr.isEmpty,
-                       let durationLimit = Int(videoDurationLimitStr) {
-                        mode = .singleVideo(videoDuration: durationLimit)
-                    } else {
-                        mode = .singleVideo()
-                    }
-                    
+                  mode = .singleVideo(
+                    videoDuration : videoDurationLimit.flatMap { Int($0) }
+                  )
                 case "singleVideoOrImage":
-                    if let videoDurationLimitStr = modeString["videoDurationLimit"] as? String,
-                       !videoDurationLimitStr.isEmpty,
-                       let durationLimit = Int(videoDurationLimitStr) {
-                        mode = .singleVideoOrPicture(videoDuration: durationLimit)
-                    } else {
-                        mode = .singleVideoOrPicture()
-                    }
-                    
+                  mode = .singleVideoOrPicture(
+                    videoDuration : videoDurationLimit.flatMap { Int($0) }
+                  )
+ 
                 default:
                     break
                 }
