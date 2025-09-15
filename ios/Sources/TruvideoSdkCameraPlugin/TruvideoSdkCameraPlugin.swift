@@ -234,6 +234,7 @@ public class TruvideoSdkCameraPlugin: CAPPlugin, CAPBridgedPlugin {
         
         initiateARCamera(viewController: rootViewController,mode : mode, orientation : orientation){cameraResult in
             do {
+                print("cameraResult.toDictionary()",cameraResult.toDictionary())
                 let cameraResultDict = cameraResult.toDictionary()
                 if let mediaData = cameraResultDict["media"] as? [[String: Any]] {
                     var sanitizedMediaData: [[String: Any]] = []
@@ -241,14 +242,21 @@ public class TruvideoSdkCameraPlugin: CAPPlugin, CAPBridgedPlugin {
                     for item in mediaData {
                         var sanitizedItem: [String: Any] = [:]
                         for (key, value) in item {
-                            if key == "type" {
-                                if (value as AnyObject).description == "TruvideoSdkCamera.TruvideoSdkCameraMediaType.photo"  {
-                                    sanitizedItem["type"] = "PICTURE"
-                                } else {
+                            if key == "type", let mediaType = value as? TruvideoSdkCamera.TruvideoSdkCameraMediaType {
+                                switch mediaType {
+                                case .photo:
+                                    sanitizedItem["type"] = "IMAGE"
+                                case .clip:
                                     sanitizedItem["type"] = "VIDEO"
+                                default:
+                                    sanitizedItem["type"] = "UNKNOWN"
                                 }
-                            }
-                            if JSONSerialization.isValidJSONObject([key: value]) {
+                            } else if key == "resolution", let resolution = value as? TruvideoSdkCamera.TruvideoSdkCameraResolution {
+                                sanitizedItem["resolution"] = [
+                                    "width": resolution.width,
+                                    "height": resolution.height
+                                ]
+                            } else if JSONSerialization.isValidJSONObject([key: value]) {
                                 sanitizedItem[key] = value
                             } else if let value = value as? CustomStringConvertible {
                                 sanitizedItem[key] = value.description
@@ -256,6 +264,7 @@ public class TruvideoSdkCameraPlugin: CAPPlugin, CAPBridgedPlugin {
                                 print("Skipping invalid JSON value for key: \(key)")
                             }
                         }
+                        
                         sanitizedMediaData.append(sanitizedItem)
                     }
                     
@@ -263,7 +272,7 @@ public class TruvideoSdkCameraPlugin: CAPPlugin, CAPBridgedPlugin {
                        let jsonString = String(data: jsonData, encoding: .utf8) {
                         print("📤 Camera Result JSON:", jsonString)
                         print("📤 Camera Result JSON:", sanitizedMediaData)
-                        call.resolve(["result": sanitizedMediaData])
+                        call.resolve(["value": jsonString])
                     } else {
                         call.reject("Serialization_Error", "Failed to serialize camera result")
                     }
@@ -334,6 +343,7 @@ public class TruvideoSdkCameraPlugin: CAPPlugin, CAPBridgedPlugin {
             guard let lensFacingString = configuration["lensFacing"] as? String,
                   let flashModeString = configuration["flashMode"] as? String,
                   let orientationString = configuration["orientation"] as? String,
+                  let imageFormatString = configuration["imageFormat"] as? String,
                   //  let outputPath = configuration["outputPath"] as? String,
                   let modeString = configuration["mode"] as? [String:Any] else {
                 print("Error: Missing or invalid configuration values")
@@ -411,9 +421,17 @@ public class TruvideoSdkCameraPlugin: CAPPlugin, CAPBridgedPlugin {
                     break
                 }
                 
-            }catch {
-                
             }
+            let imageFormat: TruvideoSdkCameraImageFormat
+                        switch imageFormatString {
+                        case "jpeg":
+                          imageFormat = .jpeg
+                        case "png":
+                          imageFormat = .png
+                        default:
+                            print("Unknown imageFormat:", imageFormatString)
+                            return
+                      }
             
             // Configuring the camera with various parameters based on specific requirements.
             let configuration = TruvideoSdkCameraConfiguration(
@@ -425,7 +443,8 @@ public class TruvideoSdkCameraPlugin: CAPPlugin, CAPBridgedPlugin {
                 frontResolution: nil,
                 backResolutions: [],
                 backResolution: nil,
-                mode: mode
+                mode: mode,
+                imageFormat: imageFormat
             )
             
             self.checkCameraPermissions { [weak self] granted in
@@ -499,11 +518,12 @@ extension TruvideoSdkCameraResult {
 extension TruvideoSdkCamera.TruvideoSdkCameraMedia {
     func toDictionary() -> [String: Any] {
         return [
+            "id": id,
             "createdAt": createdAt,
             "filePath": filePath,
             "type": type,
-            "cameraLensFacing": cameraLensFacing.rawValue,
-            "rotation": rotation.rawValue,
+            "lensFacing": lensFacing.rawValue,
+            "orientation": orientation.rawValue,
             "resolution": resolution,
             "duration": duration
         ]
