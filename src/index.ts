@@ -37,7 +37,7 @@ export async function initCameraScreen(
   });
 }
 
-export function initARCameraScreen(
+export async function initARCameraScreen(
     configuration: ARCameraConfiguration
 ): Promise<{ value: CameraResult[] }> {
     let data = {

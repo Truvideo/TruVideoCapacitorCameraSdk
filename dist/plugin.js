@@ -102,7 +102,7 @@ var capacitorTruvideoSdkCamera = (function (exports, core) {
             return { value: parsedResult };
         });
     }
-    function initARCameraScreen(configuration) {
+    async function initARCameraScreen(configuration) {
         let data = {
             mode: configuration.mode.mode,
             videoLimit: configuration.mode.videoLimit,

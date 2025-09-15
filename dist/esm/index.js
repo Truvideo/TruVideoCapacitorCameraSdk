@@ -25,7 +25,7 @@ export async function initCameraScreen(configuration) {
         return { value: parsedResult };
     });
 }
-export function initARCameraScreen(configuration) {
+export async function initARCameraScreen(configuration) {
     let data = {
         mode: configuration.mode.mode,
         videoLimit: configuration.mode.videoLimit,
