@@ -517,13 +517,35 @@ extension TruvideoSdkCameraResult {
 
 extension TruvideoSdkCamera.TruvideoSdkCameraMedia {
     func toDictionary() -> [String: Any] {
+        var lensFacingStr = if(lensFacing == TruvideoSdkCameraLensFacing.back){
+            "back"
+        }else{
+            "front"
+        }
+        var orientationStr = if(orientation == TruvideoSdkCameraOrientation.portrait){
+            "portrait"
+        }else if(orientation == TruvideoSdkCameraOrientation.landscapeLeft){
+            "landscapeLeft"
+        }else if(orientation == TruvideoSdkCameraOrientation.landscapeRight){
+            "landscapeRight"
+        }else {
+            "portraitReverse"
+        }
+        
+        var typeStr = if(type == TruvideoSdkCameraMediaType.clip){
+            "VIDEO"
+        }else{
+            "IMAGE"
+        }
+        
+        
         return [
             "id": id,
             "createdAt": createdAt,
             "filePath": filePath,
-            "type": type,
-            "lensFacing": lensFacing.rawValue,
-            "orientation": orientation.rawValue,
+            "type": typeStr,
+            "lensFacing": lensFacingStr,
+            "orientation": orientationStr,
             "resolution": resolution,
             "duration": duration
         ]

@@ -22,6 +22,8 @@ import com.google.gson.Gson
 import com.truvideo.sdk.camera.interfaces.TruvideoSdkCameraScannerValidation
 import com.truvideo.sdk.camera.model.TruvideoSdkArCameraConfiguration
 import com.truvideo.sdk.camera.model.TruvideoSdkCameraImageFormat
+import com.truvideo.sdk.camera.model.TruvideoSdkCameraMedia
+import com.truvideo.sdk.camera.model.TruvideoSdkCameraMediaType
 import com.truvideo.sdk.camera.model.TruvideoSdkCameraScannerCode
 import com.truvideo.sdk.camera.model.TruvideoSdkCameraScannerConfiguration
 import com.truvideo.sdk.camera.model.TruvideoSdkCameraScannerValidationResult
@@ -66,13 +68,25 @@ class CameraActivity : ComponentActivity() {
                     put("width", media.resolution.width)
                     put("height", media.resolution.height)
                 }
+                val lensFacing = if (media.lensFacing == TruvideoSdkCameraLensFacing.FRONT) "front" else "back"
+                val orientation = when(media.orientation){
+                    TruvideoSdkCameraOrientation.PORTRAIT -> "portrait"
+                    TruvideoSdkCameraOrientation.LANDSCAPE_LEFT -> "landscapeLeft"
+                    TruvideoSdkCameraOrientation.LANDSCAPE_RIGHT -> "landscapeRight"
+                    TruvideoSdkCameraOrientation.PORTRAIT_REVERSE -> "portraitReverse"
+                    else -> "portrait"
+                }
+                val type = when(media.type){
+                    TruvideoSdkCameraMediaType.IMAGE -> "IMAGE"
+                    TruvideoSdkCameraMediaType.VIDEO -> "VIDEO"
+                }
                 val obj = JSONObject().apply {
                     put("id", media.id)
                     put("createdAt", (media.createdAt/1000.0))
                     put("filePath", media.filePath)
-                    put("type", media.type.name)          // enum as string
-                    put("lensFacing", media.lensFacing.name)
-                    put("orientation",media.orientation.name)
+                    put("type", type)          // enum as string
+                    put("lensFacing", lensFacing)
+                    put("orientation",orientation)
                     put("resolution", resolutionObj)
                     put("duration", (media.duration/1000.0))
                 }
@@ -116,13 +130,25 @@ class CameraActivity : ComponentActivity() {
                     put("width", media.resolution.width)
                     put("height", media.resolution.height)
                 }
+                val lensFacing = if (media.lensFacing == TruvideoSdkCameraLensFacing.FRONT) "front" else "back"
+                val orientation = when(media.orientation){
+                    TruvideoSdkCameraOrientation.PORTRAIT -> "portrait"
+                    TruvideoSdkCameraOrientation.LANDSCAPE_LEFT -> "landscapeLeft"
+                    TruvideoSdkCameraOrientation.LANDSCAPE_RIGHT -> "landscapeRight"
+                    TruvideoSdkCameraOrientation.PORTRAIT_REVERSE -> "portraitReverse"
+                    else -> "portrait"
+                }
+                val type = when(media.type){
+                    TruvideoSdkCameraMediaType.IMAGE -> "IMAGE"
+                    TruvideoSdkCameraMediaType.VIDEO -> "VIDEO"
+                }
                 val obj = JSONObject().apply {
                     put("id", media.id)
                     put("createdAt", (media.createdAt/1000.0))
                     put("filePath", media.filePath)
-                    put("type", media.type.name)          // enum as string
-                    put("lensFacing", media.lensFacing.name)
-                    put("orientation",media.orientation.name)
+                    put("type", type)          // enum as string
+                    put("lensFacing", lensFacing)
+                    put("orientation",orientation)
                     put("resolution", resolutionObj)
                     put("duration", (media.duration/1000.0))
                 }
