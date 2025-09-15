@@ -21,17 +21,21 @@ import org.json.JSONObject
 import com.google.gson.Gson
 import com.truvideo.sdk.camera.interfaces.TruvideoSdkCameraScannerValidation
 import com.truvideo.sdk.camera.model.TruvideoSdkArCameraConfiguration
+import com.truvideo.sdk.camera.model.TruvideoSdkCameraImageFormat
 import com.truvideo.sdk.camera.model.TruvideoSdkCameraScannerCode
 import com.truvideo.sdk.camera.model.TruvideoSdkCameraScannerConfiguration
 import com.truvideo.sdk.camera.model.TruvideoSdkCameraScannerValidationResult
 import com.truvideo.sdk.camera.ui.activities.arcamera.TruvideoSdkArCameraContract
 import com.truvideo.sdk.camera.ui.activities.scanner.TruvideoSdkCameraScannerContract
+import org.json.JSONArray
 
 class CameraActivity : ComponentActivity() {
     var configuration = ""
     var lensFacing = TruvideoSdkCameraLensFacing.BACK
     var flashMode = TruvideoSdkCameraFlashMode.OFF
     var orientation: TruvideoSdkCameraOrientation? = null
+    var imageFormat = TruvideoSdkCameraImageFormat.JPEG
+    var videoStabilizationEnabled = true
     var mode = TruvideoSdkCameraMode.videoAndImage()
     var from = ""
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -55,7 +59,26 @@ class CameraActivity : ComponentActivity() {
         val cameraScreen = registerForActivityResult(TruvideoSdkCameraContract()){
             // value
             val ret = JSObject()
-            ret.put("value",Gson().toJson(it))
+
+            val jsonArray = JSONArray()
+            it.forEach { media ->
+                val resolutionObj = JSONObject().apply {
+                    put("width", media.resolution.width)
+                    put("height", media.resolution.height)
+                }
+                val obj = JSONObject().apply {
+                    put("id", media.id)
+                    put("createdAt", (media.createdAt/1000.0))
+                    put("filePath", media.filePath)
+                    put("type", media.type.name)          // enum as string
+                    put("lensFacing", media.lensFacing.name)
+                    put("orientation",media.orientation.name)
+                    put("resolution", resolutionObj)
+                    put("duration", (media.duration/1000.0))
+                }
+                jsonArray.put(obj)
+            }
+            ret.put("value",jsonArray.toString())
             TruvideoSdkCameraPlugin.pluginCall.resolve(ret)
             finish()
         }
@@ -87,7 +110,25 @@ class CameraActivity : ComponentActivity() {
     fun startAR(){
         var arScreen = registerForActivityResult(TruvideoSdkArCameraContract()){
             val ret = JSObject()
-            ret.put("value",Gson().toJson(it))
+            val jsonArray = JSONArray()
+            it.forEach { media ->
+                val resolutionObj = JSONObject().apply {
+                    put("width", media.resolution.width)
+                    put("height", media.resolution.height)
+                }
+                val obj = JSONObject().apply {
+                    put("id", media.id)
+                    put("createdAt", (media.createdAt/1000.0))
+                    put("filePath", media.filePath)
+                    put("type", media.type.name)          // enum as string
+                    put("lensFacing", media.lensFacing.name)
+                    put("orientation",media.orientation.name)
+                    put("resolution", resolutionObj)
+                    put("duration", (media.duration/1000.0))
+                }
+                jsonArray.put(obj)
+            }
+            ret.put("value",jsonArray.toString())
             TruvideoSdkCameraPlugin.pluginCall.resolve(ret)
             finish()
         }
@@ -98,6 +139,19 @@ class CameraActivity : ComponentActivity() {
                 "landscapeLeft" -> orientation = TruvideoSdkCameraOrientation.LANDSCAPE_LEFT
                 "landscapeRight" -> orientation = TruvideoSdkCameraOrientation.LANDSCAPE_RIGHT
                 "portraitReverse" -> orientation = TruvideoSdkCameraOrientation.PORTRAIT_REVERSE
+            }
+        }
+        if(jsonConfiguration.has("imageFormat")) {
+            when(jsonConfiguration.getString("imageFormat")){
+                "jpeg" -> imageFormat = TruvideoSdkCameraImageFormat.JPEG
+                "png" -> imageFormat = TruvideoSdkCameraImageFormat.PNG
+            }
+        }
+
+        if(jsonConfiguration.has("videoStabilizationEnabled")) {
+            when(jsonConfiguration.getString("videoStabilizationEnabled")){
+                "true" -> videoStabilizationEnabled = true
+                "false" -> videoStabilizationEnabled = false
             }
         }
         if(jsonConfiguration.has("mode")){
@@ -217,7 +271,9 @@ class CameraActivity : ComponentActivity() {
             frontResolution = frontResolution,
             backResolutions = backResolutions,
             backResolution = backResolution,
-            mode = mode
+            mode = mode,
+            imageFormat = imageFormat,
+            videoStabilizationEnabled = videoStabilizationEnabled
         )
 
         cameraScreen.launch(configuration)
@@ -247,6 +303,8 @@ class CameraActivity : ComponentActivity() {
                 "portraitReverse" -> orientation = TruvideoSdkCameraOrientation.PORTRAIT_REVERSE
             }
         }
+
+
         if(jsonConfiguration.has("mode")){
             val jsonMode = JSONObject(jsonConfiguration.getString("mode"))
             val videoDurationLimit : String? = if(jsonMode.getString("videoDurationLimit") != "" ) jsonMode.getString("videoDurationLimit") else null
