@@ -51,7 +51,7 @@ class CameraActivity : ComponentActivity() {
         if(from.equals("camera",true)){
             startCamera()
         }else if(from.equals("AR",true)){
-            startAR()
+            startAR(this)
         }else if(from.equals("QR",false)){
             startQR()
         }
@@ -121,7 +121,7 @@ class CameraActivity : ComponentActivity() {
         }
     }
 
-    fun startAR(){
+    fun startAR(context: Context){
         var arScreen = registerForActivityResult(TruvideoSdkArCameraContract()){
             val ret = JSObject()
             val jsonArray = JSONArray()
@@ -159,6 +159,13 @@ class CameraActivity : ComponentActivity() {
             finish()
         }
         val jsonConfiguration = JSONObject(configuration)
+        var outputPath = context.filesDir.path + "/camera"
+        if(jsonConfiguration.has("outputPath")){
+            val newOutputPath = jsonConfiguration.getString("outputPath")
+            if(newOutputPath.isNotEmpty()){
+                outputPath = context.filesDir.path + newOutputPath
+            }
+        }
         if(jsonConfiguration.has("orientation")) {
             when(jsonConfiguration.getString("orientation")){
                 "portrait" -> orientation = TruvideoSdkCameraOrientation.PORTRAIT
@@ -230,7 +237,7 @@ class CameraActivity : ComponentActivity() {
             }
         }
         arScreen.launch(TruvideoSdkArCameraConfiguration(
-            outputPath = this@CameraActivity.filesDir.path + "/camera"  ,
+            outputPath = outputPath ,
             orientation = orientation,
             mode = mode
         ))
@@ -266,7 +273,7 @@ class CameraActivity : ComponentActivity() {
         if(jsonConfiguration.has("outputPath")){
             val newOutputPath = jsonConfiguration.getString("outputPath")
             if(newOutputPath.isNotEmpty()){
-                outputPath = newOutputPath
+                outputPath = context.filesDir.path + newOutputPath
             }
         }
         var frontResolutions: List<TruvideoSdkCameraResolution> = ArrayList()
