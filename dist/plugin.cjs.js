@@ -2,6 +2,12 @@
 
 var core = require('@capacitor/core');
 
+exports.CameraMediaType = void 0;
+(function (CameraMediaType) {
+    CameraMediaType["image"] = "IMAGE";
+    CameraMediaType["video"] = "VIDEO";
+})(exports.CameraMediaType || (exports.CameraMediaType = {}));
+
 exports.LensFacing = void 0;
 (function (LensFacing) {
     LensFacing["Back"] = "back";
@@ -12,6 +18,11 @@ exports.FlashMode = void 0;
     FlashMode["Off"] = "off";
     FlashMode["On"] = "on";
 })(exports.FlashMode || (exports.FlashMode = {}));
+exports.ImageFormat = void 0;
+(function (ImageFormat) {
+    ImageFormat["JPEG"] = "jpeg";
+    ImageFormat["PNG"] = "png";
+})(exports.ImageFormat || (exports.ImageFormat = {}));
 exports.Orientation = void 0;
 (function (Orientation) {
     Orientation["Portrait"] = "portrait";
@@ -72,7 +83,7 @@ const TruvideoSdkCamera = core.registerPlugin('TruvideoSdkCamera');
 function cleanObject(obj) {
     return Object.fromEntries(Object.entries(obj).filter(([_, v]) => v !== null && v !== undefined));
 }
-function initCameraScreen(configuration) {
+async function initCameraScreen(configuration) {
     const cleanedConfig = cleanObject({
         lensFacing: configuration.lensFacing,
         flashMode: configuration.flashMode,
@@ -82,10 +93,14 @@ function initCameraScreen(configuration) {
         backResolution: configuration.backResolution,
         frontResolutions: configuration.frontResolutions,
         backResolutions: configuration.backResolutions,
-        mode: configuration.mode
+        mode: configuration.mode,
+        imageFormat: configuration.imageFormat,
     });
     return TruvideoSdkCamera.initCameraScreen({
         value: JSON.stringify(cleanedConfig)
+    }).then((result) => {
+        const parsedResult = JSON.parse(result.value);
+        return { value: parsedResult };
     });
 }
 function initARCameraScreen(configuration) {
@@ -102,7 +117,10 @@ function initARCameraScreen(configuration) {
         orientation: configuration.orientation,
         mode: JSON.stringify(data),
     };
-    return TruvideoSdkCamera.initARCameraScreen(JSON.stringify(cameraConfiguration));
+    return TruvideoSdkCamera.initARCameraScreen(JSON.stringify(cameraConfiguration)).then((result) => {
+        const parsedResult = JSON.parse(result.value);
+        return { value: parsedResult };
+    });
 }
 function initScanerScreen() {
     return TruvideoSdkCamera.initScanerScreen(JSON.stringify(""));
