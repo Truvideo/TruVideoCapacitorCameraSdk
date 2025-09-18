@@ -40,6 +40,10 @@ class CameraActivity : ComponentActivity() {
     var videoStabilizationEnabled = true
     var mode = TruvideoSdkCameraMode.videoAndImage()
     var from = ""
+    var frontResolutions : List<TruvideoSdkCameraResolution> = listOf()
+    var frontResolution : TruvideoSdkCameraResolution? = null
+    var backResolutions : List<TruvideoSdkCameraResolution> = listOf()
+    var backResolution : TruvideoSdkCameraResolution? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -265,9 +269,6 @@ class CameraActivity : ComponentActivity() {
         // Start camera with configuration
         // if camera is not available, it will return null
         if (cameraScreen == null) return
-        // Get camera information
-        val cameraInfo = TruvideoSdkCamera.getInformation()
-
         var outputPath = context.filesDir.path + "/camera"
         val jsonConfiguration = JSONObject(configuration)
         if(jsonConfiguration.has("outputPath")){
@@ -276,24 +277,6 @@ class CameraActivity : ComponentActivity() {
                 outputPath = context.filesDir.path + newOutputPath
             }
         }
-        var frontResolutions: List<TruvideoSdkCameraResolution> = ArrayList()
-        if (cameraInfo.frontCamera != null) {
-            // if you don't want to decide the list of allowed resolutions, you can s1end all the resolutions or an empty list
-            frontResolutions = cameraInfo.frontCamera!!.resolutions
-        }
-
-
-        // You can decide the default resolution for the front camera
-        var frontResolution: TruvideoSdkCameraResolution? = null
-        if (cameraInfo.frontCamera != null) {
-            // Example of how tho pick the first resolution as the default one
-            val resolutions = cameraInfo.frontCamera!!.resolutions
-            if (resolutions.isNotEmpty()) {
-                frontResolution = resolutions[0]
-            }
-        }
-        val backResolutions: List<TruvideoSdkCameraResolution> = ArrayList()
-        val backResolution: TruvideoSdkCameraResolution? = null
         checkConfigure()
         val configuration = TruvideoSdkCameraConfiguration(
             lensFacing = lensFacing,
@@ -311,6 +294,23 @@ class CameraActivity : ComponentActivity() {
 
         cameraScreen.launch(configuration)
 
+    }
+
+    // Single Resolution Parser
+    fun parseResolution(obj: JSONObject): TruvideoSdkCameraResolution {
+        val width = obj.optInt("width", 0)
+        val height = obj.optInt("height", 0)
+        return TruvideoSdkCameraResolution(width, height) // Assume Resolution(width, height) is your model
+    }
+
+    // Array of Resolutions
+    fun parseResolutions(array: JSONArray): List<TruvideoSdkCameraResolution> {
+        val list = mutableListOf<TruvideoSdkCameraResolution>()
+        for (i in 0 until array.length()) {
+            val resObj = array.getJSONObject(i)
+            list.add(parseResolution(resObj))
+        }
+        return list
     }
 
     private fun checkConfigure() {
@@ -335,6 +335,22 @@ class CameraActivity : ComponentActivity() {
                 "landscapeRight" -> orientation = TruvideoSdkCameraOrientation.LANDSCAPE_RIGHT
                 "portraitReverse" -> orientation = TruvideoSdkCameraOrientation.PORTRAIT_REVERSE
             }
+        }
+
+        // Front Resolutions
+        if (jsonConfiguration.has("frontResolutions")) {
+            frontResolutions = parseResolutions(jsonConfiguration.getJSONArray("frontResolutions"))
+        }
+        if (jsonConfiguration.has("frontResolution")) {
+            frontResolution = parseResolution(jsonConfiguration.getJSONObject("frontResolution"))
+        }
+
+// Back Resolutions
+        if (jsonConfiguration.has("backResolutions")) {
+            backResolutions = parseResolutions(jsonConfiguration.getJSONArray("backResolutions"))
+        }
+        if (jsonConfiguration.has("backResolution")) {
+            backResolution = parseResolution(jsonConfiguration.getJSONObject("backResolution"))
         }
 
 

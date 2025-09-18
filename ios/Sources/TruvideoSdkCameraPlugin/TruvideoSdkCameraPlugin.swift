@@ -334,6 +334,18 @@ public class TruvideoSdkCameraPlugin: CAPPlugin, CAPBridgedPlugin {
         }
     }
     
+    // Resolution parser
+    func parseResolution(_ dict: [String: Any]) -> TruvideoSdkCameraResolution {
+        let width = dict["width"] as? Int ?? 0
+        let height = dict["height"] as? Int ?? 0
+        return TruvideoSdkCameraResolution(width: Int32(width), height: Int32(height))
+    }
+
+    // Arrays of resolutions
+    func parseResolutions(_ array: [[String: Any]]) -> [TruvideoSdkCameraResolution] {
+        return array.map { parseResolution($0) }
+    }
+    
     private func cameraInitiate(configuration: [String:Any], completion: @escaping (_ cameraResult: TruvideoSdkCameraResult) -> Void) {
         DispatchQueue.main.async {
             guard let rootViewController = UIApplication.shared.keyWindow?.rootViewController else {
@@ -371,6 +383,36 @@ public class TruvideoSdkCameraPlugin: CAPPlugin, CAPBridgedPlugin {
                 print("Unknown orientation:", orientationString)
                 return
             }
+            
+            // Front Resolutions
+              let frontResolutions: [TruvideoSdkCameraResolution] = {
+                  if let array = configuration["frontResolutions"] as? [[String: Any]] {
+                    return self.parseResolutions(array)
+                  }
+                  return []
+              }()
+
+              let frontResolution: TruvideoSdkCameraResolution? = {
+                  if let dict = configuration["frontResolution"] as? [String: Any] {
+                    return self.parseResolution(dict)
+                  }
+                  return nil
+              }()
+
+              // Back Resolutions
+              let backResolutions: [TruvideoSdkCameraResolution] = {
+                  if let array = configuration["backResolutions"] as? [[String: Any]] {
+                    return self.parseResolutions(array)
+                  }
+                  return []
+              }()
+
+              let backResolution: TruvideoSdkCameraResolution? = {
+                  if let dict = configuration["backResolution"] as? [String: Any] {
+                    return self.parseResolution(dict)
+                  }
+                  return nil
+              }()
             
             var mode: TruvideoSdkCameraMediaMode = .videoAndPicture()
             
@@ -433,16 +475,26 @@ public class TruvideoSdkCameraPlugin: CAPPlugin, CAPBridgedPlugin {
                             return
                       }
             
+            var outputPath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
+                .appendingPathComponent("camera").path
+
+            if let newOutputPath = configuration["outputPath"] as? String,
+               !newOutputPath.isEmpty {
+                outputPath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
+                    .appendingPathComponent(newOutputPath).path
+            }
+
+            
             // Configuring the camera with various parameters based on specific requirements.
             let configuration = TruvideoSdkCameraConfiguration(
                 lensFacing: lensType,
                 flashMode: flashMode,
                 orientation: orientation,
-                outputPath: "",
-                frontResolutions: [],
-                frontResolution: nil,
-                backResolutions: [],
-                backResolution: nil,
+                outputPath: outputPath,
+                frontResolutions: frontResolutions,
+                frontResolution: frontResolution,
+                backResolutions: backResolutions,
+                backResolution: backResolution,
                 mode: mode,
                 imageFormat: imageFormat
             )
