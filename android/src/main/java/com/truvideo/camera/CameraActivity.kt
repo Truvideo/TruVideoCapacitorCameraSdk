@@ -18,7 +18,6 @@ import com.truvideo.sdk.camera.model.TruvideoSdkCameraOrientation
 import com.truvideo.sdk.camera.model.TruvideoSdkCameraResolution
 import com.truvideo.sdk.camera.ui.activities.camera.TruvideoSdkCameraContract
 import org.json.JSONObject
-import com.google.gson.Gson
 import com.truvideo.sdk.camera.interfaces.TruvideoSdkCameraScannerValidation
 import com.truvideo.sdk.camera.model.TruvideoSdkArCameraConfiguration
 import com.truvideo.sdk.camera.model.TruvideoSdkCameraImageFormat
@@ -110,8 +109,12 @@ class CameraActivity : ComponentActivity() {
     fun sendEvent(eventName: String, eventData: TruvideoSdkCameraEvent) {
         TruvideoSdkCameraPlugin.mainBridge?.let {
             it.webView.post {
+                val obj = JSONObject().apply {
+                    put("data",eventData.data)
+                    put("type",eventData.type)
+                }
                 TruvideoSdkCameraPlugin.notifyJs.sendEventJS(eventName, com.getcapacitor.JSObject().apply {
-                    put("cameraEvent", Gson().toJson(eventData))
+                    put("cameraEvent", obj)
                 })
             }
         }

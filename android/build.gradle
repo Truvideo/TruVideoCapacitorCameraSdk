@@ -11,13 +11,13 @@ buildscript {
         maven { url 'https://jitpack.io' }
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:8.7.2' // Match your Gradle version
+        classpath 'com.android.tools.build:gradle:8.11.2' // Match your Gradle version
         classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:2.0.0'
     }
 }
 
 plugins {
-    id 'org.jetbrains.kotlin.plugin.compose' version '2.0.0'
+    id 'org.jetbrains.kotlin.plugin.compose' version '2.2.20'
 }
 apply plugin: 'com.android.library'
 apply plugin: 'org.jetbrains.kotlin.android'
@@ -68,28 +68,28 @@ dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation project(':capacitor-android')
     implementation "androidx.appcompat:appcompat:$androidxAppCompatVersion"
-    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.8.7'
-    implementation 'androidx.activity:activity-compose:1.10.0'
-    implementation platform('androidx.compose:compose-bom:2024.04.01')
+    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.9.4'
+    implementation 'androidx.activity:activity-compose:1.11.0'
+    implementation platform('androidx.compose:compose-bom:2025.09.00')
     implementation 'androidx.compose.ui:ui'
     implementation 'androidx.compose.ui:ui-graphics'
     implementation 'androidx.compose.ui:ui-tooling-preview'
     implementation 'androidx.compose.material3:material3'
-    implementation 'com.google.android.material:material:1.10.0'
-    implementation 'androidx.activity:activity:1.8.0'
-    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
+    implementation 'com.google.android.material:material:1.13.0'
+    implementation 'androidx.activity:activity:1.11.0'
+    implementation 'androidx.constraintlayout:constraintlayout:2.2.1'
     testImplementation "junit:junit:$junitVersion"
     androidTestImplementation "androidx.test.ext:junit:$androidxJunitVersion"
     androidTestImplementation "androidx.test.espresso:espresso-core:$androidxEspressoCoreVersion"
 
     implementation 'com.github.Truvideo:truvideo-sdk-android-camera:78.1.1'
     // implementation 'com.github.Truvideo:truvideo-sdk-android-core:76.2.5'
-    implementation "androidx.compose.compiler:compiler:1.5.11"
-    androidTestImplementation platform('androidx.compose:compose-bom:2024.04.01')
+    implementation "androidx.compose.compiler:compiler:1.5.15"
+    androidTestImplementation platform('androidx.compose:compose-bom:2025.09.00')
 
     androidTestImplementation 'androidx.compose.ui:ui-test-junit4'
     debugImplementation 'androidx.compose.ui:ui-tooling'
     debugImplementation 'androidx.compose.ui:ui-test-manifest'
-    implementation "org.kodein.di:kodein-di:7.21.1"
-    implementation 'com.google.code.gson:gson:2.10.1'
+    implementation "org.kodein.di:kodein-di:7.26.1"
+
 }

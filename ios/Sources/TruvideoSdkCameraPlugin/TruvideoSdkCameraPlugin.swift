@@ -124,10 +124,7 @@ public class TruvideoSdkCameraPlugin: CAPPlugin, CAPBridgedPlugin {
                                 call.reject("Serialization_Error", "Failed to serialize camera result")
                             }
                         }
-                    } catch {
-                        print("Error serializing camera result: \(error.localizedDescription)")
-                        call.reject("Serialization_Error", "Error serializing camera result", error)
-                    }
+                    } 
                 }
             } else {
                 print("Invalid JSON format")
@@ -184,7 +181,7 @@ public class TruvideoSdkCameraPlugin: CAPPlugin, CAPBridgedPlugin {
                 case "landscapeRight":
                     orientation = .landscapeRight
                 default:
-                    print("Unknown orientation:", orientationString)
+                    print("Unknown orientation:", orientationString ?? "")
                     return
                 }
                 switch mainMode {
@@ -277,9 +274,6 @@ public class TruvideoSdkCameraPlugin: CAPPlugin, CAPBridgedPlugin {
                         call.reject("Serialization_Error", "Failed to serialize camera result")
                     }
                 }
-            } catch {
-                print("Error serializing camera result: \(error.localizedDescription)")
-                call.reject("Serialization_Error", "Error serializing camera result", error)
             }
         }
         
@@ -326,7 +320,7 @@ public class TruvideoSdkCameraPlugin: CAPPlugin, CAPBridgedPlugin {
                 
                 self.subscribeToCameraEvents()
                 viewController.presentTruvideoSdkScannerCameraView(preset: configuration, onComplete: { result in
-                    if let result = result as? TruvideoSdkCameraScannerCode{
+                    if let result = result{
                         completion(result)
                     }
                 })
@@ -569,12 +563,12 @@ extension TruvideoSdkCameraResult {
 
 extension TruvideoSdkCamera.TruvideoSdkCameraMedia {
     func toDictionary() -> [String: Any] {
-        var lensFacingStr = if(lensFacing == TruvideoSdkCameraLensFacing.back){
+        let lensFacingStr = if(lensFacing == TruvideoSdkCameraLensFacing.back){
             "back"
         }else{
             "front"
         }
-        var orientationStr = if(orientation == TruvideoSdkCameraOrientation.portrait){
+        let orientationStr = if(orientation == TruvideoSdkCameraOrientation.portrait){
             "portrait"
         }else if(orientation == TruvideoSdkCameraOrientation.landscapeLeft){
             "landscapeLeft"
@@ -584,7 +578,7 @@ extension TruvideoSdkCamera.TruvideoSdkCameraMedia {
             "portraitReverse"
         }
         
-        var typeStr = if(type == TruvideoSdkCameraMediaType.clip){
+        let typeStr = if(type == TruvideoSdkCameraMediaType.clip){
             "VIDEO"
         }else{
             "IMAGE"
