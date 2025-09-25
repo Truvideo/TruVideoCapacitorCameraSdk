@@ -1,27 +1,45 @@
-import { LensFacing, FlashMode, Orientation, CameraMode } from './cameraConfigEnums'
+import { LensFacing, FlashMode, Orientation, CameraMode, ImageFormat } from './cameraConfigEnums'
 
 export interface CameraConfiguration {
   lensFacing: LensFacing;
   flashMode: FlashMode;
   orientation: Orientation;
   outputPath: string;
-  frontResolutions: Resolution | null;
+  frontResolutions: Resolution[] | null;
   frontResolution: Resolution | null;
-  backResolutions: Resolution | null;
+  backResolutions: Resolution[] | null;
   backResolution: Resolution | null;
   mode: CameraMode;
+  imageFormat?: ImageFormat;
 };
+
+export interface CameraResult {
+  id: string,
+  createdAt: number,
+  filePath: string,
+  type: CameraMediaType,
+  lensFacing: LensFacing,
+  orientation: Orientation,
+  resolution: Resolution,
+  duration: number,
+}
+
+export enum CameraMediaType {
+  image = 'IMAGE',
+  video = 'VIDEO',
+}
 
 export interface Configuration {
   lensFacing: LensFacing;
   flashMode: FlashMode;
   orientation: Orientation;
   outputPath: string;
-  frontResolutions: Resolution | null;
+  frontResolutions: Resolution[] | null;
   frontResolution: Resolution | null;
-  backResolutions: Resolution | null;
+  backResolutions: Resolution[] | null;
   backResolution: Resolution | null;
   mode: CameraMode;
+  imageFormat?: ImageFormat;
 }
 
 export interface Resolution {

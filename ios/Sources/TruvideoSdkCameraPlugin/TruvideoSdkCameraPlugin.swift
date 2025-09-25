@@ -124,10 +124,7 @@ public class TruvideoSdkCameraPlugin: CAPPlugin, CAPBridgedPlugin {
                                 call.reject("Serialization_Error", "Failed to serialize camera result")
                             }
                         }
-                    } catch {
-                        print("Error serializing camera result: \(error.localizedDescription)")
-                        call.reject("Serialization_Error", "Error serializing camera result", error)
-                    }
+                    } 
                 }
             } else {
                 print("Invalid JSON format")
@@ -184,7 +181,7 @@ public class TruvideoSdkCameraPlugin: CAPPlugin, CAPBridgedPlugin {
                 case "landscapeRight":
                     orientation = .landscapeRight
                 default:
-                    print("Unknown orientation:", orientationString)
+                    print("Unknown orientation:", orientationString ?? "")
                     return
                 }
                 switch mainMode {
@@ -234,6 +231,7 @@ public class TruvideoSdkCameraPlugin: CAPPlugin, CAPBridgedPlugin {
         
         initiateARCamera(viewController: rootViewController,mode : mode, orientation : orientation){cameraResult in
             do {
+                print("cameraResult.toDictionary()",cameraResult.toDictionary())
                 let cameraResultDict = cameraResult.toDictionary()
                 if let mediaData = cameraResultDict["media"] as? [[String: Any]] {
                     var sanitizedMediaData: [[String: Any]] = []
@@ -241,14 +239,21 @@ public class TruvideoSdkCameraPlugin: CAPPlugin, CAPBridgedPlugin {
                     for item in mediaData {
                         var sanitizedItem: [String: Any] = [:]
                         for (key, value) in item {
-                            if key == "type" {
-                                if (value as AnyObject).description == "TruvideoSdkCamera.TruvideoSdkCameraMediaType.photo"  {
-                                    sanitizedItem["type"] = "PICTURE"
-                                } else {
+                            if key == "type", let mediaType = value as? TruvideoSdkCamera.TruvideoSdkCameraMediaType {
+                                switch mediaType {
+                                case .photo:
+                                    sanitizedItem["type"] = "IMAGE"
+                                case .clip:
                                     sanitizedItem["type"] = "VIDEO"
+                                default:
+                                    sanitizedItem["type"] = "UNKNOWN"
                                 }
-                            }
-                            if JSONSerialization.isValidJSONObject([key: value]) {
+                            } else if key == "resolution", let resolution = value as? TruvideoSdkCamera.TruvideoSdkCameraResolution {
+                                sanitizedItem["resolution"] = [
+                                    "width": resolution.width,
+                                    "height": resolution.height
+                                ]
+                            } else if JSONSerialization.isValidJSONObject([key: value]) {
                                 sanitizedItem[key] = value
                             } else if let value = value as? CustomStringConvertible {
                                 sanitizedItem[key] = value.description
@@ -256,6 +261,7 @@ public class TruvideoSdkCameraPlugin: CAPPlugin, CAPBridgedPlugin {
                                 print("Skipping invalid JSON value for key: \(key)")
                             }
                         }
+                        
                         sanitizedMediaData.append(sanitizedItem)
                     }
                     
@@ -263,14 +269,11 @@ public class TruvideoSdkCameraPlugin: CAPPlugin, CAPBridgedPlugin {
                        let jsonString = String(data: jsonData, encoding: .utf8) {
                         print("📤 Camera Result JSON:", jsonString)
                         print("📤 Camera Result JSON:", sanitizedMediaData)
-                        call.resolve(["result": sanitizedMediaData])
+                        call.resolve(["value": jsonString])
                     } else {
                         call.reject("Serialization_Error", "Failed to serialize camera result")
                     }
                 }
-            } catch {
-                print("Error serializing camera result: \(error.localizedDescription)")
-                call.reject("Serialization_Error", "Error serializing camera result", error)
             }
         }
         
@@ -317,12 +320,24 @@ public class TruvideoSdkCameraPlugin: CAPPlugin, CAPBridgedPlugin {
                 
                 self.subscribeToCameraEvents()
                 viewController.presentTruvideoSdkScannerCameraView(preset: configuration, onComplete: { result in
-                    if let result = result as? TruvideoSdkCameraScannerCode{
+                    if let result = result{
                         completion(result)
                     }
                 })
             }
         }
+    }
+    
+    // Resolution parser
+    func parseResolution(_ dict: [String: Any]) -> TruvideoSdkCameraResolution {
+        let width = dict["width"] as? Int ?? 0
+        let height = dict["height"] as? Int ?? 0
+        return TruvideoSdkCameraResolution(width: Int32(width), height: Int32(height))
+    }
+
+    // Arrays of resolutions
+    func parseResolutions(_ array: [[String: Any]]) -> [TruvideoSdkCameraResolution] {
+        return array.map { parseResolution($0) }
     }
     
     private func cameraInitiate(configuration: [String:Any], completion: @escaping (_ cameraResult: TruvideoSdkCameraResult) -> Void) {
@@ -334,6 +349,7 @@ public class TruvideoSdkCameraPlugin: CAPPlugin, CAPBridgedPlugin {
             guard let lensFacingString = configuration["lensFacing"] as? String,
                   let flashModeString = configuration["flashMode"] as? String,
                   let orientationString = configuration["orientation"] as? String,
+                  let imageFormatString = configuration["imageFormat"] as? String,
                   //  let outputPath = configuration["outputPath"] as? String,
                   let modeString = configuration["mode"] as? [String:Any] else {
                 print("Error: Missing or invalid configuration values")
@@ -361,6 +377,36 @@ public class TruvideoSdkCameraPlugin: CAPPlugin, CAPBridgedPlugin {
                 print("Unknown orientation:", orientationString)
                 return
             }
+            
+            // Front Resolutions
+              let frontResolutions: [TruvideoSdkCameraResolution] = {
+                  if let array = configuration["frontResolutions"] as? [[String: Any]] {
+                    return self.parseResolutions(array)
+                  }
+                  return []
+              }()
+
+              let frontResolution: TruvideoSdkCameraResolution? = {
+                  if let dict = configuration["frontResolution"] as? [String: Any] {
+                    return self.parseResolution(dict)
+                  }
+                  return nil
+              }()
+
+              // Back Resolutions
+              let backResolutions: [TruvideoSdkCameraResolution] = {
+                  if let array = configuration["backResolutions"] as? [[String: Any]] {
+                    return self.parseResolutions(array)
+                  }
+                  return []
+              }()
+
+              let backResolution: TruvideoSdkCameraResolution? = {
+                  if let dict = configuration["backResolution"] as? [String: Any] {
+                    return self.parseResolution(dict)
+                  }
+                  return nil
+              }()
             
             var mode: TruvideoSdkCameraMediaMode = .videoAndPicture()
             
@@ -411,21 +457,40 @@ public class TruvideoSdkCameraPlugin: CAPPlugin, CAPBridgedPlugin {
                     break
                 }
                 
-            }catch {
-                
             }
+            let imageFormat: TruvideoSdkCameraImageFormat
+                        switch imageFormatString {
+                        case "jpeg":
+                          imageFormat = .jpeg
+                        case "png":
+                          imageFormat = .png
+                        default:
+                            print("Unknown imageFormat:", imageFormatString)
+                            return
+                      }
+            
+            var outputPath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
+                .appendingPathComponent("camera").path
+
+            if let newOutputPath = configuration["outputPath"] as? String,
+               !newOutputPath.isEmpty {
+                outputPath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
+                    .appendingPathComponent(newOutputPath).path
+            }
+
             
             // Configuring the camera with various parameters based on specific requirements.
             let configuration = TruvideoSdkCameraConfiguration(
                 lensFacing: lensType,
                 flashMode: flashMode,
                 orientation: orientation,
-                outputPath: "",
-                frontResolutions: [],
-                frontResolution: nil,
-                backResolutions: [],
-                backResolution: nil,
-                mode: mode
+                outputPath: outputPath,
+                frontResolutions: frontResolutions,
+                frontResolution: frontResolution,
+                backResolutions: backResolutions,
+                backResolution: backResolution,
+                mode: mode,
+                imageFormat: imageFormat
             )
             
             self.checkCameraPermissions { [weak self] granted in
@@ -498,12 +563,35 @@ extension TruvideoSdkCameraResult {
 
 extension TruvideoSdkCamera.TruvideoSdkCameraMedia {
     func toDictionary() -> [String: Any] {
+        let lensFacingStr = if(lensFacing == TruvideoSdkCameraLensFacing.back){
+            "back"
+        }else{
+            "front"
+        }
+        let orientationStr = if(orientation == TruvideoSdkCameraOrientation.portrait){
+            "portrait"
+        }else if(orientation == TruvideoSdkCameraOrientation.landscapeLeft){
+            "landscapeLeft"
+        }else if(orientation == TruvideoSdkCameraOrientation.landscapeRight){
+            "landscapeRight"
+        }else {
+            "portraitReverse"
+        }
+        
+        let typeStr = if(type == TruvideoSdkCameraMediaType.clip){
+            "VIDEO"
+        }else{
+            "IMAGE"
+        }
+        
+        
         return [
+            "id": id,
             "createdAt": createdAt,
             "filePath": filePath,
-            "type": type,
-            "cameraLensFacing": cameraLensFacing.rawValue,
-            "rotation": rotation.rawValue,
+            "type": typeStr,
+            "lensFacing": lensFacingStr,
+            "orientation": orientationStr,
             "resolution": resolution,
             "duration": duration
         ]
