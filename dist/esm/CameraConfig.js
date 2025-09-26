@@ -1,7 +1,3 @@
 ;
-export var CameraMediaType;
-(function (CameraMediaType) {
-    CameraMediaType["image"] = "IMAGE";
-    CameraMediaType["video"] = "VIDEO";
-})(CameraMediaType || (CameraMediaType = {}));
+export {};
 //# sourceMappingURL=CameraConfig.js.map
