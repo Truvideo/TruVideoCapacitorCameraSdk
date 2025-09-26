@@ -8,11 +8,6 @@ export var FlashMode;
     FlashMode["Off"] = "off";
     FlashMode["On"] = "on";
 })(FlashMode || (FlashMode = {}));
-export var ImageFormat;
-(function (ImageFormat) {
-    ImageFormat["JPEG"] = "jpeg";
-    ImageFormat["PNG"] = "png";
-})(ImageFormat || (ImageFormat = {}));
 export var Orientation;
 (function (Orientation) {
     Orientation["Portrait"] = "portrait";

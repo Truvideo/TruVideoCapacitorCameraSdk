@@ -8,11 +8,6 @@ export enum FlashMode {
   On = 'on',
 }
 
-export enum ImageFormat {
-  JPEG = 'jpeg',
-  PNG = 'png',
-}
-
 export enum Orientation {
   Portrait = 'portrait',
   LandscapeLeft = 'landscapeLeft',

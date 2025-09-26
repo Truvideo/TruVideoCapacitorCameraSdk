@@ -6,10 +6,6 @@ export declare enum FlashMode {
     Off = "off",
     On = "on"
 }
-export declare enum ImageFormat {
-    JPEG = "jpeg",
-    PNG = "png"
-}
 export declare enum Orientation {
     Portrait = "portrait",
     LandscapeLeft = "landscapeLeft",

@@ -1,7 +1,7 @@
 import { registerPlugin } from '@capacitor/core';
 
 import type { TruvideoSdkCameraPlugin } from './definitions';
-import { ARCameraConfiguration, ARConfiguration, CameraConfiguration, CameraResult, Configuration } from './CameraConfig';
+import { ARCameraConfiguration, ARConfiguration, CameraConfiguration, Configuration } from './CameraConfig';
 const TruvideoSdkCamera = registerPlugin<TruvideoSdkCameraPlugin>('TruvideoSdkCamera');
 
 export * from './CameraConfig'
@@ -13,9 +13,9 @@ function cleanObject(obj: any): any {
   );
 }
 
-export async function initCameraScreen(
+export function initCameraScreen(
   configuration: CameraConfiguration
-): Promise<{ value: CameraResult[] }> {
+): Promise<{ value: string }> {
   const cleanedConfig: Configuration = cleanObject({
     lensFacing: configuration.lensFacing,
     flashMode: configuration.flashMode,
@@ -25,21 +25,17 @@ export async function initCameraScreen(
     backResolution: configuration.backResolution,
     frontResolutions: configuration.frontResolutions,
     backResolutions: configuration.backResolutions,
-    mode: configuration.mode,
-    imageFormat: configuration.imageFormat, 
+    mode: configuration.mode
   });
 
   return TruvideoSdkCamera.initCameraScreen({
     value: JSON.stringify(cleanedConfig)
-  }).then((result) => {
-    const parsedResult: CameraResult[] = JSON.parse(result.value);
-    return { value: parsedResult };
   });
 }
 
-export async function initARCameraScreen(
+export function initARCameraScreen(
     configuration: ARCameraConfiguration
-): Promise<{ value: CameraResult[] }> {
+): Promise<{ value: string }> {
     let data = {
         mode: configuration.mode.mode,
         videoLimit: configuration.mode.videoLimit,
@@ -55,10 +51,7 @@ export async function initARCameraScreen(
     }
     return TruvideoSdkCamera.initARCameraScreen(
         JSON.stringify(cameraConfiguration)
-    ).then((result) => {
-      const parsedResult: CameraResult[] = JSON.parse(result.value);
-      return { value: parsedResult };
-    });
+    );
 }
 
 export function initScanerScreen(): Promise<{ value: string }> {
