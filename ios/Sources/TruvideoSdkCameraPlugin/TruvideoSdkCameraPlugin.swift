@@ -166,6 +166,7 @@ public class TruvideoSdkCameraPlugin: CAPPlugin, CAPBridgedPlugin {
             if let jsonConfig = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any] {
                 let modeString = jsonConfig["mode"] as? String;
                 let orientationString = jsonConfig["orientation"] as? String;
+                
                 guard let data = modeString?.data(using: .utf8) else { return }
                 let modeData = try JSONSerialization.jsonObject(with: data, options: []) as! [String: Any]
                 let mainMode  = modeData["mode"] as? String;
@@ -173,7 +174,7 @@ public class TruvideoSdkCameraPlugin: CAPPlugin, CAPBridgedPlugin {
                 let mediaLimit : String? = (modeData["mediaLimit"] as? String).flatMap { $0.isEmpty ? nil : $0 }
                 let videoLimit : String? = (modeData["videoLimit"] as? String).flatMap { $0.isEmpty ? nil : $0 }
                 let imageLimit : String? = (modeData["imageLimit"] as? String).flatMap { $0.isEmpty ? nil : $0 }
-                
+            
                 switch orientationString {
                 case "portrait":
                     orientation = .portrait
@@ -317,12 +318,23 @@ public class TruvideoSdkCameraPlugin: CAPPlugin, CAPBridgedPlugin {
                 
                 self.subscribeToCameraEvents()
                 viewController.presentTruvideoSdkScannerCameraView(preset: configuration, onComplete: { result in
-                    if let result = result as? TruvideoSdkCameraScannerCode{
+                    if let result = result{
                         completion(result)
                     }
                 })
             }
         }
+    }
+    // Resolution parser
+    func parseResolution(_ dict: [String: Any]) -> TruvideoSdkCameraResolution {
+        let width = dict["width"] as? Int ?? 0
+        let height = dict["height"] as? Int ?? 0
+        return TruvideoSdkCameraResolution(width: Int32(width), height: Int32(height))
+    }
+   
+    // Arrays of resolutions
+    func parseResolutions(_ array: [[String: Any]]) -> [TruvideoSdkCameraResolution] {
+        return array.map { parseResolution($0) }
     }
     
     private func cameraInitiate(configuration: [String:Any], completion: @escaping (_ cameraResult: TruvideoSdkCameraResult) -> Void) {
@@ -335,6 +347,8 @@ public class TruvideoSdkCameraPlugin: CAPPlugin, CAPBridgedPlugin {
                   let flashModeString = configuration["flashMode"] as? String,
                   let orientationString = configuration["orientation"] as? String,
                   //  let outputPath = configuration["outputPath"] as? String,
+                  let outputPath = configuration["outputPath"] as? String,
+                  let imageFormatString = configuration["imageFormat"] as? String,
                   let modeString = configuration["mode"] as? [String:Any] else {
                 print("Error: Missing or invalid configuration values")
                 return
@@ -362,7 +376,53 @@ public class TruvideoSdkCameraPlugin: CAPPlugin, CAPBridgedPlugin {
                 return
             }
             
+            let outputPathMain = if(outputPath != ""){
+                FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!.path + outputPath
+            }else{
+                ""
+            }
             var mode: TruvideoSdkCameraMediaMode = .videoAndPicture()
+            
+            let imageFormat: TruvideoSdkCameraImageFormat
+                        switch imageFormatString {
+                        case "jpeg":
+                          imageFormat = .jpeg
+                        case "png":
+                          imageFormat = .png
+                        default:
+                            print("Unknown imageFormat:", imageFormatString)
+                            return
+                      }
+            // Front Resolutions
+              let frontResolutions: [TruvideoSdkCameraResolution] = {
+                  if let array = configuration["frontResolutions"] as? [[String: Any]] {
+                    return self.parseResolutions(array)
+                  }
+                  return []
+              }()
+     
+              let frontResolution: TruvideoSdkCameraResolution? = {
+                  if let dict = configuration["frontResolution"] as? [String: Any] {
+                    return self.parseResolution(dict)
+                  }
+                  return nil
+              }()
+     
+              // Back Resolutions
+              let backResolutions: [TruvideoSdkCameraResolution] = {
+                  if let array = configuration["backResolutions"] as? [[String: Any]] {
+                    return self.parseResolutions(array)
+                  }
+                  return []
+              }()
+     
+              let backResolution: TruvideoSdkCameraResolution? = {
+                  if let dict = configuration["backResolution"] as? [String: Any] {
+                    return self.parseResolution(dict)
+                  }
+                  return nil
+              }()
+             
             
             do {
                 let mainMode  = modeString["mode"] as? String;
@@ -411,8 +471,6 @@ public class TruvideoSdkCameraPlugin: CAPPlugin, CAPBridgedPlugin {
                     break
                 }
                 
-            }catch {
-                
             }
             
             // Configuring the camera with various parameters based on specific requirements.
@@ -420,12 +478,13 @@ public class TruvideoSdkCameraPlugin: CAPPlugin, CAPBridgedPlugin {
                 lensFacing: lensType,
                 flashMode: flashMode,
                 orientation: orientation,
-                outputPath: "",
-                frontResolutions: [],
-                frontResolution: nil,
-                backResolutions: [],
-                backResolution: nil,
-                mode: mode
+                outputPath: outputPathMain,
+                frontResolutions: frontResolutions,
+                frontResolution: frontResolution,
+                backResolutions: backResolutions,
+                backResolution: backResolution,
+                mode: mode,
+                imageFormat: imageFormat
             )
             
             self.checkCameraPermissions { [weak self] granted in
@@ -499,11 +558,12 @@ extension TruvideoSdkCameraResult {
 extension TruvideoSdkCamera.TruvideoSdkCameraMedia {
     func toDictionary() -> [String: Any] {
         return [
+            "id" : id,
             "createdAt": createdAt,
             "filePath": filePath,
             "type": type,
-            "cameraLensFacing": cameraLensFacing.rawValue,
-            "rotation": rotation.rawValue,
+            "lensFacing": lensFacing.rawValue,
+            "orientation": orientation.rawValue,
             "resolution": resolution,
             "duration": duration
         ]

@@ -1,4 +1,4 @@
-import { LensFacing, FlashMode, Orientation, CameraMode } from './cameraConfigEnums'
+import { LensFacing, FlashMode, Orientation, CameraMode, Resolution,ImageFormat } from './cameraConfigEnums'
 
 export interface CameraConfiguration {
   lensFacing: LensFacing;
@@ -10,6 +10,7 @@ export interface CameraConfiguration {
   backResolutions: Resolution | null;
   backResolution: Resolution | null;
   mode: CameraMode;
+  imageFormat?: ImageFormat;
 };
 
 export interface Configuration {
@@ -22,12 +23,9 @@ export interface Configuration {
   backResolutions: Resolution | null;
   backResolution: Resolution | null;
   mode: CameraMode;
+  imageFormat?: ImageFormat;
 }
 
-export interface Resolution {
-  width: number;
-  height: number;
-}
 
 export interface ARCameraConfiguration {
   outputPath: string;

@@ -1,12 +1,15 @@
+import { CameraResult } from './cameraConfigEnums';
 import { ARCameraConfiguration, CameraConfiguration } from './CameraConfig';
 export * from './CameraConfig';
 export * from './cameraConfigEnums';
 export declare function initCameraScreen(configuration: CameraConfiguration): Promise<{
     value: string;
 }>;
+export declare function initCameraScreenTS(configuration: CameraConfiguration): Promise<CameraResult[]>;
 export declare function initARCameraScreen(configuration: ARCameraConfiguration): Promise<{
     value: string;
 }>;
+export declare function initARCameraScreenTS(configuration: ARCameraConfiguration): Promise<CameraResult[]>;
 export declare function initScanerScreen(): Promise<{
     value: string;
 }>;

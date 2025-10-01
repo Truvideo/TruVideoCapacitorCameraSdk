@@ -8,6 +8,11 @@ export var FlashMode;
     FlashMode["Off"] = "off";
     FlashMode["On"] = "on";
 })(FlashMode || (FlashMode = {}));
+export var ImageFormat;
+(function (ImageFormat) {
+    ImageFormat["JPEG"] = "jpeg";
+    ImageFormat["PNG"] = "png";
+})(ImageFormat || (ImageFormat = {}));
 export var Orientation;
 (function (Orientation) {
     Orientation["Portrait"] = "portrait";
@@ -15,6 +20,11 @@ export var Orientation;
     Orientation["LandscapeRight"] = "landscapeRight";
     Orientation["PortraitReverse"] = "portraitReverse";
 })(Orientation || (Orientation = {}));
+export var CameraMediaType;
+(function (CameraMediaType) {
+    CameraMediaType["image"] = "IMAGE";
+    CameraMediaType["video"] = "VIDEO";
+})(CameraMediaType || (CameraMediaType = {}));
 export class CameraMode {
     constructor(mode, videoLimit, imageLimit, mediaLimit, videoDurationLimit, autoClose) {
         this.videoLimit = "";

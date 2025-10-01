@@ -6,11 +6,33 @@ export declare enum FlashMode {
     Off = "off",
     On = "on"
 }
+export declare enum ImageFormat {
+    JPEG = "jpeg",
+    PNG = "png"
+}
 export declare enum Orientation {
     Portrait = "portrait",
     LandscapeLeft = "landscapeLeft",
     LandscapeRight = "landscapeRight",
     PortraitReverse = "portraitReverse"
+}
+export declare enum CameraMediaType {
+    image = "IMAGE",
+    video = "VIDEO"
+}
+export interface Resolution {
+    width: number;
+    height: number;
+}
+export interface CameraResult {
+    id: string;
+    createdAt: number;
+    filePath: string;
+    type: string;
+    lensFacing: string;
+    orientation: string;
+    resolution: Resolution;
+    duration: number;
 }
 export declare class CameraMode {
     videoLimit: string;
