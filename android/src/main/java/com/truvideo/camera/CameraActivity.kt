@@ -248,18 +248,25 @@ class CameraActivity : ComponentActivity() {
         }
 
         // Front Resolutions
-        if (jsonConfiguration.has("frontResolutions")) {
+        if (jsonConfiguration.has("frontResolutions") &&
+            jsonConfiguration.getString("frontResolutions").isNotEmpty() &&
+            jsonConfiguration.getString("frontResolutions") != "[]") {
+
             frontResolutions = parseResolutions(jsonConfiguration.getJSONArray("frontResolutions"))
         }
-        if (jsonConfiguration.has("frontResolution")) {
+        if (jsonConfiguration.has("frontResolution") &&
+            jsonConfiguration.getString("frontResolution").isNotEmpty()) {
             frontResolution = parseResolution(jsonConfiguration.getJSONObject("frontResolution"))
         }
 
 // Back Resolutions
-        if (jsonConfiguration.has("backResolutions")) {
+        if (jsonConfiguration.has("backResolutions")&&
+            jsonConfiguration.getString("backResolutions").isNotEmpty() &&
+            jsonConfiguration.getString("backResolutions") != "[]") {
             backResolutions = parseResolutions(jsonConfiguration.getJSONArray("backResolutions"))
         }
-        if (jsonConfiguration.has("backResolution")) {
+        if (jsonConfiguration.has("backResolution") &&
+            jsonConfiguration.getString("backResolution").isNotEmpty()) {
             backResolution = parseResolution(jsonConfiguration.getJSONObject("backResolution"))
         }
 

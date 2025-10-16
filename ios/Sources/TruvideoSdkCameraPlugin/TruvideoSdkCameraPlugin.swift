@@ -385,16 +385,17 @@ public class TruvideoSdkCameraPlugin: CAPPlugin, CAPBridgedPlugin {
             
             let imageFormat: TruvideoSdkCameraImageFormat
                         switch imageFormatString {
-                        case "jpeg":
-                          imageFormat = .jpeg
                         case "png":
                           imageFormat = .png
                         default:
-                            print("Unknown imageFormat:", imageFormatString)
-                            return
+                          imageFormat = .jpeg
+                        
                       }
             // Front Resolutions
               let frontResolutions: [TruvideoSdkCameraResolution] = {
+                  if(configuration["frontResolutions"] as? String != "" && configuration["frontResolutions"] as? String != "[]"){
+                      return []
+                  }
                   if let array = configuration["frontResolutions"] as? [[String: Any]] {
                     return self.parseResolutions(array)
                   }
@@ -402,6 +403,9 @@ public class TruvideoSdkCameraPlugin: CAPPlugin, CAPBridgedPlugin {
               }()
      
               let frontResolution: TruvideoSdkCameraResolution? = {
+                  if(configuration["frontResolution"] as? String != ""){
+                      return nil
+                  }
                   if let dict = configuration["frontResolution"] as? [String: Any] {
                     return self.parseResolution(dict)
                   }
@@ -410,6 +414,9 @@ public class TruvideoSdkCameraPlugin: CAPPlugin, CAPBridgedPlugin {
      
               // Back Resolutions
               let backResolutions: [TruvideoSdkCameraResolution] = {
+                  if(configuration["backResolutions"] as? String != "" && configuration["backResolutions"] as? String != "[]"){
+                      return []
+                  }
                   if let array = configuration["backResolutions"] as? [[String: Any]] {
                     return self.parseResolutions(array)
                   }
@@ -417,6 +424,9 @@ public class TruvideoSdkCameraPlugin: CAPPlugin, CAPBridgedPlugin {
               }()
      
               let backResolution: TruvideoSdkCameraResolution? = {
+                  if(configuration["backResolution"] as? String != ""){
+                      return nil
+                  }
                   if let dict = configuration["backResolution"] as? [String: Any] {
                     return self.parseResolution(dict)
                   }
