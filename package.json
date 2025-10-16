@@ -1,6 +1,6 @@
 {
-  "name": "truvideo-capacitor-camera-sdk",
-  "version": "0.0.1",
+  "name": "@trunpm/truvideo-capacitor-camera-sdk",
+  "version": "0.0.3",
   "description": "camera module functionality of Truvideo video camera sdk",
   "main": "dist/plugin.cjs.js",
   "module": "dist/esm/index.js",
@@ -13,7 +13,8 @@
     "ios/Sources",
     "ios/Tests",
     "Package.swift",
-    "TruvideoCapacitorCameraSdk.podspec"
+    "TruvideoCapacitorCameraSdk.podspec",
+    "TrunpmTruvideoCapacitorCameraSdk.podspec"
   ],
   "author": "Truvideo",
   "license": "MIT",
@@ -29,6 +30,13 @@
     "plugin",
     "native"
   ],
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/",
+    "access": "restricted"
+  },
+  "ios": {
+    "podspec": "TruvideoCapacitorCameraSdk.podspec"
+  },
   "scripts": {
     "verify": "npm run verify:ios && npm run verify:android && npm run verify:web",
     "verify:ios": "xcodebuild -scheme TruvideoCapacitorCameraSdk -destination generic/platform=iOS",
@@ -76,5 +84,9 @@
     "android": {
       "src": "android"
     }
-  }
+  },
+  "dependencies": {
+    
+  },
+  "homepage": "https://github.com/Truvideo/TruVideoCapacitorCameraSdk.git#readme"
 }

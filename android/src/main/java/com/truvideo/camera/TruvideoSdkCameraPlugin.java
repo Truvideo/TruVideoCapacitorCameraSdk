@@ -9,16 +9,7 @@ import com.getcapacitor.Plugin;
 import com.getcapacitor.PluginCall;
 import com.getcapacitor.PluginMethod;
 import com.getcapacitor.annotation.CapacitorPlugin;
-import com.truvideo.camera.CameraActivity;
 import com.truvideo.sdk.camera.TruvideoSdkCamera;
-
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
-
-import javax.crypto.Mac;
-import javax.crypto.spec.SecretKeySpec;
-
-import kotlin.Unit;
 
 @CapacitorPlugin(name = "TruvideoSdkCamera")
 public class TruvideoSdkCameraPlugin extends Plugin implements NotifyJs {

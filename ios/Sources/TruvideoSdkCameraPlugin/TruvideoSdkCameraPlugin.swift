@@ -487,23 +487,16 @@ public class TruvideoSdkCameraPlugin: CAPPlugin, CAPBridgedPlugin {
                 imageFormat: imageFormat
             )
             
-            self.checkCameraPermissions { [weak self] granted in
-                guard self != nil else { return }
-                
-                if granted {
-                    DispatchQueue.main.async {
-                        rootViewController.presentTruvideoSdkCameraView(
-                            preset: configuration,
-                            onComplete: { cameraResult in
-                                print(cameraResult.toDictionary())
-                                completion(cameraResult)
-                            }
-                        )
+            DispatchQueue.main.async {
+                rootViewController.presentTruvideoSdkCameraView(
+                    preset: configuration,
+                    onComplete: { cameraResult in
+                        print(cameraResult.toDictionary())
+                        completion(cameraResult)
                     }
-                } else {
-                    print("Camera permission not granted")
-                }
+                )
             }
+            
         }
         
         

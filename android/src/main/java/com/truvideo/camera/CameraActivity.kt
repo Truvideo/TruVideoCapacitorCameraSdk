@@ -30,18 +30,18 @@ import com.truvideo.sdk.camera.ui.activities.scanner.TruvideoSdkCameraScannerCon
 import org.json.JSONArray
 
 class CameraActivity : ComponentActivity() {
-    var configuration = ""
-    var lensFacing = TruvideoSdkCameraLensFacing.BACK
-    var flashMode = TruvideoSdkCameraFlashMode.OFF
-    var orientation: TruvideoSdkCameraOrientation? = null
-    var mode = TruvideoSdkCameraMode.videoAndImage()
-    var from = ""
-    var imageFormat = TruvideoSdkCameraImageFormat.JPEG
-    var videoStabilizationEnabled = true
-    var frontResolutions : List<TruvideoSdkCameraResolution> = listOf()
-    var frontResolution : TruvideoSdkCameraResolution? = null
-    var backResolutions : List<TruvideoSdkCameraResolution> = listOf()
-    var backResolution : TruvideoSdkCameraResolution? = null
+    private var configuration = ""
+    private var lensFacing = TruvideoSdkCameraLensFacing.BACK
+    private var flashMode = TruvideoSdkCameraFlashMode.OFF
+    private var orientation: TruvideoSdkCameraOrientation? = null
+    private var mode = TruvideoSdkCameraMode.videoAndImage()
+    private var from = ""
+    private var imageFormat = TruvideoSdkCameraImageFormat.JPEG
+    private var videoStabilizationEnabled = true
+    private var frontResolutions : List<TruvideoSdkCameraResolution> = listOf()
+    private var frontResolution : TruvideoSdkCameraResolution? = null
+    private var backResolutions : List<TruvideoSdkCameraResolution> = listOf()
+    private var backResolution : TruvideoSdkCameraResolution? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -109,7 +109,7 @@ class CameraActivity : ComponentActivity() {
         return list
     }
     fun startAR(){
-        var arScreen = registerForActivityResult(TruvideoSdkArCameraContract()){
+        val arScreen = registerForActivityResult(TruvideoSdkArCameraContract()){
             val ret = JSObject()
             ret.put("value",Gson().toJson(it))
             TruvideoSdkCameraPlugin.pluginCall.resolve(ret)
@@ -137,12 +137,12 @@ class CameraActivity : ComponentActivity() {
                         TruvideoSdkCameraMode.videoAndImage(
                             imageMaxCount = imageLimit?.toInt(),
                             videoMaxCount = videoLimit?.toInt(),
-                            durationLimit = videoDurationLimit?.toDouble()
+                            durationLimit = videoDurationLimit?.toInt()
                         )
                     }else if(mediaLimit != null){
                         TruvideoSdkCameraMode.videoAndImage(
                             maxCount = mediaLimit.toInt(),
-                            durationLimit = videoDurationLimit?.toDouble()
+                            durationLimit = videoDurationLimit?.toInt()
                         )
                     }else {
                         TruvideoSdkCameraMode.videoAndImage()
@@ -151,7 +151,7 @@ class CameraActivity : ComponentActivity() {
                 "video" -> {
                     mode = TruvideoSdkCameraMode.video(
                         maxCount = videoLimit?.toInt(),
-                        durationLimit = videoDurationLimit?.toDouble()
+                        durationLimit = videoDurationLimit?.toInt()
                     )
                 }
                 "image" -> {
@@ -164,12 +164,12 @@ class CameraActivity : ComponentActivity() {
                 }
                 "singleVideo" ->{
                     mode = TruvideoSdkCameraMode.singleVideo(
-                        durationLimit = videoDurationLimit?.toDouble()
+                        durationLimit = videoDurationLimit?.toInt()
                     )
                 }
                 "singleVideoOrImage" -> {
                     mode = TruvideoSdkCameraMode.singleVideoOrImage(
-                        durationLimit = videoDurationLimit?.toDouble()
+                        durationLimit = videoDurationLimit?.toInt()
                     )
                 }
             }
@@ -182,7 +182,7 @@ class CameraActivity : ComponentActivity() {
     }
 
     fun startQR(){
-        var qrScreen = registerForActivityResult(TruvideoSdkCameraScannerContract()){
+        val qrScreen = registerForActivityResult(TruvideoSdkCameraScannerContract()){
             val ret = JSObject()
             ret.put("value",it!!.data)
             TruvideoSdkCameraPlugin.pluginCall.resolve(ret)
@@ -297,12 +297,12 @@ class CameraActivity : ComponentActivity() {
                         mode = TruvideoSdkCameraMode.videoAndImage(
                             imageMaxCount = imageLimit?.toInt(),
                             videoMaxCount = videoLimit?.toInt(),
-                            durationLimit = videoDurationLimit?.toDouble()
+                            durationLimit = videoDurationLimit?.toInt()
                         )
                     }else if(mediaLimit != null){
                         mode = TruvideoSdkCameraMode.videoAndImage(
                             maxCount = mediaLimit.toInt(),
-                            durationLimit = videoDurationLimit?.toDouble()
+                            durationLimit = videoDurationLimit?.toInt()
                         )
                     }else {
                         mode = TruvideoSdkCameraMode.videoAndImage()
@@ -311,7 +311,7 @@ class CameraActivity : ComponentActivity() {
                 "video" -> {
                     mode = TruvideoSdkCameraMode.video(
                         maxCount = videoLimit?.toInt(),
-                        durationLimit = videoDurationLimit?.toDouble()
+                        durationLimit = videoDurationLimit?.toInt()
                     )
                 }
                 "image" -> {
@@ -324,12 +324,12 @@ class CameraActivity : ComponentActivity() {
                 }
                 "singleVideo" ->{
                     mode = TruvideoSdkCameraMode.singleVideo(
-                        durationLimit = videoDurationLimit?.toDouble()
+                        durationLimit = videoDurationLimit?.toInt()
                     )
                 }
                 "singleVideoOrImage" -> {
                     mode = TruvideoSdkCameraMode.singleVideoOrImage(
-                        durationLimit = videoDurationLimit?.toDouble()
+                        durationLimit = videoDurationLimit?.toInt()
                     )
                 }
             }
