@@ -32,7 +32,7 @@ public class TruvideoSdkCameraPlugin extends Plugin implements NotifyJs {
         TruvideoSdkCamera.TruvideoSdkCamera.requestInstallAugmentedReality(getActivity());
     }
     @PluginMethod
-    public void initARScreen(PluginCall call){
+    public void initARCameraScreen(PluginCall call){
         pluginCall = call;
         mainBridge = bridge;
         notifyJs = this;
@@ -40,7 +40,7 @@ public class TruvideoSdkCameraPlugin extends Plugin implements NotifyJs {
     }
 
     @PluginMethod
-    public void initQRScreen(PluginCall call){
+    public void initScanerScreen(PluginCall call){
         pluginCall = call;
         mainBridge = bridge;
         notifyJs = this;
