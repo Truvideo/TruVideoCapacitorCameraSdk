@@ -5,7 +5,7 @@ export * from './cameraConfigEnums';
 export declare function initCameraScreen(configuration: CameraConfiguration): Promise<{
     value: string;
 }>;
-export declare function initCameraScreenTS(): Promise<CameraResult[]>;
+export declare function initCameraScreenTS(configuration: CameraConfiguration): Promise<CameraResult[]>;
 export declare function initARCameraScreen(configuration: ARCameraConfiguration): Promise<{
     value: string;
 }>;

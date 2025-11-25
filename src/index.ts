@@ -64,18 +64,18 @@ export function initCameraScreen(
   });
 }
 
-export async function initCameraScreenTS(): Promise<CameraResult[]> {
+export async function initCameraScreenTS(configuration: CameraConfiguration): Promise<CameraResult[]> {
   const cleanedConfig: Configuration = cleanObject({
-    lensFacing: LensFacing.Back,
-    flashMode: FlashMode.Off,
-    orientation: null,
-    outputPath: "",
-    frontResolution: "",
-    backResolution: "",
-    frontResolutions: [],
-    backResolutions: [],
-    mode: CameraMode.videoAndImage(),
-    imageFormat: ImageFormat.JPEG
+    lensFacing: configuration.lensFacing,
+    flashMode: configuration.flashMode,
+    orientation: configuration.orientation,
+    outputPath: configuration.outputPath,
+    frontResolution: configuration.frontResolution,
+    backResolution: configuration.backResolution,
+    frontResolutions: configuration.frontResolutions,
+    backResolutions: configuration.backResolutions,
+    mode: configuration.mode,
+    imageFormat: configuration.imageFormat
   });
 
   let response = await TruvideoSdkCamera.initCameraScreen({

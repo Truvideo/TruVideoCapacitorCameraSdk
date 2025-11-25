@@ -121,18 +121,18 @@ var capacitorTruvideoSdkCamera = (function (exports, core) {
             value: JSON.stringify(cleanedConfig)
         });
     }
-    async function initCameraScreenTS() {
+    async function initCameraScreenTS(configuration) {
         const cleanedConfig = cleanObject({
-            lensFacing: exports.LensFacing.Back,
-            flashMode: exports.FlashMode.Off,
-            orientation: null,
-            outputPath: "",
-            frontResolution: "",
-            backResolution: "",
-            frontResolutions: [],
-            backResolutions: [],
-            mode: CameraMode.videoAndImage(),
-            imageFormat: exports.ImageFormat.JPEG
+            lensFacing: configuration.lensFacing,
+            flashMode: configuration.flashMode,
+            orientation: configuration.orientation,
+            outputPath: configuration.outputPath,
+            frontResolution: configuration.frontResolution,
+            backResolution: configuration.backResolution,
+            frontResolutions: configuration.frontResolutions,
+            backResolutions: configuration.backResolutions,
+            mode: configuration.mode,
+            imageFormat: configuration.imageFormat
         });
         let response = await TruvideoSdkCamera.initCameraScreen({
             value: JSON.stringify(cleanedConfig)
