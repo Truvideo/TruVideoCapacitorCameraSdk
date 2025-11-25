@@ -1,7 +1,7 @@
 import { registerPlugin } from '@capacitor/core';
 
 import type { TruvideoSdkCameraPlugin } from './definitions';
-import { CameraMode, CameraResult, FlashMode, ImageFormat, LensFacing, Orientation} from './cameraConfigEnums';
+import { CameraMode, CameraResult, FlashMode, ImageFormat, LensFacing} from './cameraConfigEnums';
 import { ARCameraConfiguration, ARConfiguration, CameraConfiguration, Configuration } from './CameraConfig';
 const TruvideoSdkCamera = registerPlugin<TruvideoSdkCameraPlugin>('TruvideoSdkCamera');
 

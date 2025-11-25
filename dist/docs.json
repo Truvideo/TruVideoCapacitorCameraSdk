@@ -23,12 +23,12 @@
       },
       {
         "name": "initARCameraScreen",
-        "signature": "(configuration: string) => Promise<{ value: string; }>",
+        "signature": "(options: { value: string; }) => Promise<{ value: string; }>",
         "parameters": [
           {
-            "name": "configuration",
+            "name": "options",
             "docs": "",
-            "type": "string"
+            "type": "{ value: string; }"
           }
         ],
         "returns": "Promise<{ value: string; }>",
@@ -39,12 +39,12 @@
       },
       {
         "name": "initScanerScreen",
-        "signature": "(configuration: string) => Promise<{ value: string; }>",
+        "signature": "(options: { value: string; }) => Promise<{ value: string; }>",
         "parameters": [
           {
-            "name": "configuration",
+            "name": "options",
             "docs": "",
-            "type": "string"
+            "type": "{ value: string; }"
           }
         ],
         "returns": "Promise<{ value: string; }>",

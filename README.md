@@ -45,12 +45,12 @@ initCameraScreen(options: { value: string; }) => Promise<{ value: string; }>
 ### initARCameraScreen(...)
 
 ```typescript
-initARCameraScreen(configuration: string) => Promise<{ value: string; }>
+initARCameraScreen(options: { value: string; }) => Promise<{ value: string; }>
 ```
 
-| Param               | Type                |
-| ------------------- | ------------------- |
-| **`configuration`** | <code>string</code> |
+| Param         | Type                            |
+| ------------- | ------------------------------- |
+| **`options`** | <code>{ value: string; }</code> |
 
 **Returns:** <code>Promise&lt;{ value: string; }&gt;</code>
 
@@ -60,12 +60,12 @@ initARCameraScreen(configuration: string) => Promise<{ value: string; }>
 ### initScanerScreen(...)
 
 ```typescript
-initScanerScreen(configuration: string) => Promise<{ value: string; }>
+initScanerScreen(options: { value: string; }) => Promise<{ value: string; }>
 ```
 
-| Param               | Type                |
-| ------------------- | ------------------- |
-| **`configuration`** | <code>string</code> |
+| Param         | Type                            |
+| ------------- | ------------------------------- |
+| **`options`** | <code>{ value: string; }</code> |
 
 **Returns:** <code>Promise&lt;{ value: string; }&gt;</code>
 

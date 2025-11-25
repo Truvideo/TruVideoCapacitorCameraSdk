@@ -121,18 +121,18 @@ var capacitorTruvideoSdkCamera = (function (exports, core) {
             value: JSON.stringify(cleanedConfig)
         });
     }
-    async function initCameraScreenTS(configuration) {
+    async function initCameraScreenTS() {
         const cleanedConfig = cleanObject({
-            lensFacing: configuration.lensFacing,
-            flashMode: configuration.flashMode,
-            orientation: configuration.orientation,
-            outputPath: configuration.outputPath,
-            frontResolution: configuration.frontResolution == null ? "" : configuration.frontResolution,
-            backResolution: configuration.backResolution == null ? "" : configuration.backResolution,
-            frontResolutions: configuration.frontResolutions,
-            backResolutions: configuration.backResolutions,
-            mode: configuration.mode,
-            imageFormat: configuration.imageFormat
+            lensFacing: exports.LensFacing.Back,
+            flashMode: exports.FlashMode.Off,
+            orientation: null,
+            outputPath: "",
+            frontResolution: "",
+            backResolution: "",
+            frontResolutions: [],
+            backResolutions: [],
+            mode: CameraMode.videoAndImage(),
+            imageFormat: exports.ImageFormat.JPEG
         });
         let response = await TruvideoSdkCamera.initCameraScreen({
             value: JSON.stringify(cleanedConfig)
@@ -155,7 +155,9 @@ var capacitorTruvideoSdkCamera = (function (exports, core) {
             orientation: configuration.orientation,
             mode: JSON.stringify(data),
         };
-        return TruvideoSdkCamera.initARCameraScreen(JSON.stringify(cameraConfiguration));
+        return TruvideoSdkCamera.initARCameraScreen({
+            value: JSON.stringify(cameraConfiguration)
+        });
     }
     async function initARCameraScreenTS(configuration) {
         let data = {
@@ -174,13 +176,29 @@ var capacitorTruvideoSdkCamera = (function (exports, core) {
         // return TruvideoSdkCamera.initARCameraScreen(
         //     JSON.stringify(cameraConfiguration)
         // );
-        let response = await TruvideoSdkCamera.initARCameraScreen(JSON.stringify(cameraConfiguration));
+        let response = await TruvideoSdkCamera.initARCameraScreen({
+            value: JSON.stringify(cameraConfiguration)
+        });
         //let response = await TruvideoSdkMedia.getAllFileUploadRequests({ status : status || ''});
         //return parsePluginResponse<MediaData[]>(response,"requests");
         return parsePluginResponse(response, "value");
     }
     function initScanerScreen() {
-        return TruvideoSdkCamera.initScanerScreen(JSON.stringify(""));
+        const cleanedConfig = cleanObject({
+            lensFacing: exports.LensFacing.Back,
+            flashMode: exports.FlashMode.Off,
+            orientation: null,
+            outputPath: "",
+            frontResolution: "",
+            backResolution: "",
+            frontResolutions: [],
+            backResolutions: [],
+            mode: CameraMode.videoAndImage(),
+            imageFormat: exports.ImageFormat.JPEG
+        });
+        return TruvideoSdkCamera.initScanerScreen({
+            value: JSON.stringify(cleanedConfig)
+        });
     }
     function version() {
         return TruvideoSdkCamera.version();
