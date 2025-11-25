@@ -49,10 +49,14 @@ class CameraActivity : ComponentActivity() {
             AndroidTheme {}
         }
         getEvent()
-        getIntentData()
+        if(intent.hasExtra("from")){
+            from = intent.getStringExtra("from")!!
+        }
         if(from.equals("camera",true)){
+            getIntentData()
             startCamera()
         }else if(from.equals("AR",true)){
+            getIntentData()
             startAR()
         }else if(from.equals("QR",false)){
             startQR()
@@ -86,9 +90,6 @@ class CameraActivity : ComponentActivity() {
     fun getIntentData(){
         if(intent.hasExtra("configuration")){
             configuration = intent.getStringExtra("configuration")!!
-        }
-        if(intent.hasExtra("from")){
-            from = intent.getStringExtra("from")!!
         }
     }
 
