@@ -185,7 +185,7 @@ class CameraActivity : ComponentActivity() {
     fun startQR(){
         val qrScreen = registerForActivityResult(TruvideoSdkCameraScannerContract()){
             val ret = JSObject()
-            ret.put("value",it!!.data)
+            ret.put("value",it?.data ?: "")
             TruvideoSdkCameraPlugin.pluginCall.resolve(ret)
             finish()
         }
