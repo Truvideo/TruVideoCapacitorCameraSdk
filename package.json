@@ -1,6 +1,6 @@
 {
   "name": "@trunpm/truvideo-capacitor-camera-sdk",
-  "version": "0.0.5",
+  "version": "1.0.1-beta.1",
   "description": "camera module functionality of Truvideo video camera sdk",
   "main": "dist/plugin.cjs.js",
   "module": "dist/esm/index.js",
@@ -48,9 +48,9 @@
     "prettier": "prettier \"**/*.{css,html,ts,js,java}\" --plugin=prettier-plugin-java",
     "swiftlint": "node-swiftlint",
     "docgen": "docgen --api TruvideoSdkCameraPlugin --output-readme README.md --output-json dist/docs.json",
-    "build": "npm run clean && npm run docgen && tsc && rollup -c rollup.config.mjs",
+    "build": "npm run clean && npm run docgen && tsc --skipLibCheck && rollup -c rollup.config.mjs",
     "clean": "rimraf ./dist",
-    "watch": "tsc --watch",
+    "watch": "tsc --watch --skipLibCheck",
     "prepublishOnly": "npm run build",
     "sonar": "sonar-scanner"
   },
@@ -87,8 +87,6 @@
       "src": "android"
     }
   },
-  "dependencies": {
-
-  },
+  "dependencies": {},
   "homepage": "https://github.com/Truvideo/TruVideoCapacitorCameraSdk.git#readme"
 }

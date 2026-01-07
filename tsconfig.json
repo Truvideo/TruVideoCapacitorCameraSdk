@@ -18,8 +18,14 @@
     "sourceMap": true,
     "strict": true,
     "target": "es2019",
+    "skipLibCheck": true,
+    "types": []
   },
   "files": [
     "src/index.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "**/node_modules/**"
   ]
 }
