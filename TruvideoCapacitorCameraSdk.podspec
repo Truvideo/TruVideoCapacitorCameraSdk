@@ -15,4 +15,5 @@ Pod::Spec.new do |s|
   s.dependency 'Capacitor'
   s.swift_version = '5.1'
    s.dependency 'truvideo-sdk-camera', '78.2.2'
+   s.dependency 'truvideo-sdk-core'
 end

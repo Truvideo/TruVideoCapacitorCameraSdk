@@ -6,14 +6,14 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.ActivityResultLauncher
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import com.getcapacitor.JSObject
 import com.truvideo.camera.ui.theme.AndroidTheme
 import com.truvideo.sdk.camera.TruvideoSdkCamera
-import com.truvideo.sdk.camera.model.TruvideoSdkCameraConfiguration
-import com.truvideo.sdk.camera.model.TruvideoSdkCameraEvent
 import com.truvideo.sdk.camera.model.TruvideoSdkCameraFlashMode
 import com.truvideo.sdk.camera.model.TruvideoSdkCameraLensFacing
-import com.truvideo.sdk.camera.model.TruvideoSdkCameraMode
 import com.truvideo.sdk.camera.model.TruvideoSdkCameraOrientation
 import com.truvideo.sdk.camera.model.TruvideoSdkCameraResolution
 import com.truvideo.sdk.camera.ui.activities.camera.TruvideoSdkCameraContract
@@ -25,8 +25,12 @@ import com.truvideo.sdk.camera.model.TruvideoSdkCameraImageFormat
 import com.truvideo.sdk.camera.model.TruvideoSdkCameraScannerCode
 import com.truvideo.sdk.camera.model.TruvideoSdkCameraScannerConfiguration
 import com.truvideo.sdk.camera.model.TruvideoSdkCameraScannerValidationResult
+import com.truvideo.sdk.camera.model.external.TruvideoSdkCameraConfiguration
+import com.truvideo.sdk.camera.model.external.TruvideoSdkCameraEvent
+import com.truvideo.sdk.camera.model.external.TruvideoSdkCameraMode
 import com.truvideo.sdk.camera.ui.activities.arcamera.TruvideoSdkArCameraContract
 import com.truvideo.sdk.camera.ui.activities.scanner.TruvideoSdkCameraScannerContract
+import kotlinx.coroutines.launch
 import org.json.JSONArray
 
 class CameraActivity : ComponentActivity() {
@@ -34,7 +38,7 @@ class CameraActivity : ComponentActivity() {
     private var lensFacing = TruvideoSdkCameraLensFacing.BACK
     private var flashMode = TruvideoSdkCameraFlashMode.OFF
     private var orientation: TruvideoSdkCameraOrientation? = null
-    private var mode = TruvideoSdkCameraMode.videoAndImage()
+    private var mode : TruvideoSdkCameraMode = TruvideoSdkCameraMode.VideoAndImage()
     private var from = ""
     private var imageFormat = TruvideoSdkCameraImageFormat.JPEG
     private var videoStabilizationEnabled = true
@@ -74,9 +78,23 @@ class CameraActivity : ComponentActivity() {
         openCamera(this@CameraActivity,cameraScreen)
     }
     fun getEvent(){
-        TruvideoSdkCamera.events.observeForever{event : TruvideoSdkCameraEvent ->
-            sendEvent(eventName = "cameraEvent",event)
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                TruvideoSdkCamera.events.collect { event ->
+//                    val gson = Gson()
+//                    val eventData = mapOf(
+//                        "type" to event.eventType.name,
+//                        "data" to event.data,
+//                    )
+//                    val jsonResult = gson.toJson(eventData)
+//                    TruvideoCameraSdkPlugin.sendEvent(jsonResult)
+                    sendEvent(eventName = "cameraEvent",event)
+                }
+            }
         }
+//        TruvideoSdkCamera.events.observeForever{event : TruvideoSdkCameraEvent ->
+//            sendEvent(eventName = "cameraEvent",event)
+//        }
     }
     fun sendEvent(eventName: String, eventData: TruvideoSdkCameraEvent) {
         TruvideoSdkCameraPlugin.mainBridge?.let {
@@ -133,46 +151,97 @@ class CameraActivity : ComponentActivity() {
             val videoLimit : String? = if(jsonMode.getString("videoLimit") != "" ) jsonMode.getString("videoLimit") else null
             val imageLimit : String? = if(jsonMode.getString("imageLimit") != "" ) jsonMode.getString("imageLimit") else null
             when(jsonMode.getString("mode")) {
-                "videoAndImage" -> {
-                    mode = if(imageLimit != null || videoLimit != null){
-                        TruvideoSdkCameraMode.videoAndImage(
-                            imageMaxCount = imageLimit?.toInt(),
-                            videoMaxCount = videoLimit?.toInt(),
-                            durationLimit = videoDurationLimit?.toInt()
+                "videoAndImage" -> when {
+                    videoDurationLimit != null && mediaLimit != null ->
+                        TruvideoSdkCameraMode.VideoAndImage(
+                            limit = TruvideoSdkCameraMode.VideoAndImage.Limit.ByTotal(
+                                maxMediaCount = mediaLimit.toInt()
+                            ),
+                            videoDurationLimit = videoDurationLimit.toLong()
                         )
-                    }else if(mediaLimit != null){
-                        TruvideoSdkCameraMode.videoAndImage(
-                            maxCount = mediaLimit.toInt(),
-                            durationLimit = videoDurationLimit?.toInt()
+
+                    videoDurationLimit != null && videoLimit != null && imageLimit != null ->
+                        TruvideoSdkCameraMode.VideoAndImage(
+                            limit = TruvideoSdkCameraMode.VideoAndImage.Limit.ByType(
+                                maxImageCount = imageLimit.toInt(),
+                                maxVideoCount = videoLimit.toInt()
+                            ),
+                            videoDurationLimit = videoDurationLimit.toLong()
                         )
-                    }else {
-                        TruvideoSdkCameraMode.videoAndImage()
-                    }
+
+                    videoDurationLimit != null ->
+                        TruvideoSdkCameraMode.VideoAndImage(
+                            videoDurationLimit = videoDurationLimit.toLong()
+                        )
+
+                    else -> TruvideoSdkCameraMode.VideoAndImage()
                 }
-                "video" -> {
-                    mode = TruvideoSdkCameraMode.video(
-                        maxCount = videoLimit?.toInt(),
-                        durationLimit = videoDurationLimit?.toInt()
+
+                "video" -> TruvideoSdkCameraMode.Video(
+                    maxCount = videoLimit!!.toInt(),
+                    durationLimit = videoDurationLimit!!.toLong()
+                )
+
+                "image" -> TruvideoSdkCameraMode.Image(
+                    maxCount = imageLimit!!.toInt()
+                )
+
+                "singleImage" ->
+                    TruvideoSdkCameraMode.SingleImage(autoClose = true)
+
+                "singleVideo" ->
+                    TruvideoSdkCameraMode.SingleVideo(
+                        durationLimit = videoDurationLimit!!.toLong(),
+                        autoClose = true
                     )
-                }
-                "image" -> {
-                    mode = TruvideoSdkCameraMode.image(
-                        maxCount = imageLimit?.toInt()
+
+                "singleVideoOrImage" ->
+                    TruvideoSdkCameraMode.SingleVideoOrImage(
+                        videoDurationLimit = videoDurationLimit!!.toLong(),
+                        autoClose = true
                     )
-                }
-                "singleImage" ->{
-                    mode = TruvideoSdkCameraMode.singleImage()
-                }
-                "singleVideo" ->{
-                    mode = TruvideoSdkCameraMode.singleVideo(
-                        durationLimit = videoDurationLimit?.toInt()
-                    )
-                }
-                "singleVideoOrImage" -> {
-                    mode = TruvideoSdkCameraMode.singleVideoOrImage(
-                        durationLimit = videoDurationLimit?.toInt()
-                    )
-                }
+
+                else -> mode
+//                "videoAndImage" -> {
+//                    mode = if(imageLimit != null || videoLimit != null){
+//                        TruvideoSdkCameraMode.VideoAndImage(
+//                            imageMaxCount = imageLimit?.toInt(),
+//                            videoMaxCount = videoLimit?.toInt(),
+//                            durationLimit = videoDurationLimit?.toInt()
+//                        )
+//                    }else if(mediaLimit != null){
+//                        TruvideoSdkCameraMode.videoAndImage(
+//                            maxCount = mediaLimit.toInt(),
+//                            durationLimit = videoDurationLimit?.toInt()
+//                        )
+//                    }else {
+//                        TruvideoSdkCameraMode.videoAndImage()
+//                    }
+//                }
+//                "video" -> {
+//                    mode = TruvideoSdkCameraMode.video(
+//                        maxCount = videoLimit?.toInt(),
+//                        durationLimit = videoDurationLimit?.toInt()
+//                    )
+//                }
+//                "image" -> {
+//                    mode = TruvideoSdkCameraMode.image(
+//                        maxCount = imageLimit?.toInt()
+//                    )
+//                }
+//                "singleImage" ->{
+//                    mode = TruvideoSdkCameraMode.singleImage()
+//                }
+//                "singleVideo" ->{
+//                    mode = TruvideoSdkCameraMode.singleVideo(
+//                        durationLimit = videoDurationLimit?.toInt()
+//                    )
+//                }
+//                "singleVideoOrImage" -> {
+//                    mode = TruvideoSdkCameraMode.singleVideoOrImage(
+//                        durationLimit = videoDurationLimit?.toInt()
+//                    )
+//                }
             }
         }
         arScreen.launch(TruvideoSdkArCameraConfiguration(
@@ -300,46 +369,97 @@ class CameraActivity : ComponentActivity() {
             val videoLimit : String? = if(jsonMode.getString("videoLimit") != "" ) jsonMode.getString("videoLimit") else null
             val imageLimit : String? = if(jsonMode.getString("imageLimit") != "" ) jsonMode.getString("imageLimit") else null
             when(jsonMode.getString("mode")) {
-                "videoAndImage" -> {
-                    if(imageLimit != null || videoLimit != null){
-                        mode = TruvideoSdkCameraMode.videoAndImage(
-                            imageMaxCount = imageLimit?.toInt(),
-                            videoMaxCount = videoLimit?.toInt(),
-                            durationLimit = videoDurationLimit?.toInt()
+                "videoAndImage" -> when {
+                    videoDurationLimit != null && mediaLimit != null ->
+                        TruvideoSdkCameraMode.VideoAndImage(
+                            limit = TruvideoSdkCameraMode.VideoAndImage.Limit.ByTotal(
+                                maxMediaCount = mediaLimit.toInt()
+                            ),
+                            videoDurationLimit = videoDurationLimit.toLong()
                         )
-                    }else if(mediaLimit != null){
-                        mode = TruvideoSdkCameraMode.videoAndImage(
-                            maxCount = mediaLimit.toInt(),
-                            durationLimit = videoDurationLimit?.toInt()
+
+                    videoDurationLimit != null && videoLimit != null && imageLimit != null ->
+                        TruvideoSdkCameraMode.VideoAndImage(
+                            limit = TruvideoSdkCameraMode.VideoAndImage.Limit.ByType(
+                                maxImageCount = imageLimit.toInt(),
+                                maxVideoCount = videoLimit.toInt()
+                            ),
+                            videoDurationLimit = videoDurationLimit.toLong()
                         )
-                    }else {
-                        mode = TruvideoSdkCameraMode.videoAndImage()
-                    }
+
+                    videoDurationLimit != null ->
+                        TruvideoSdkCameraMode.VideoAndImage(
+                            videoDurationLimit = videoDurationLimit.toLong()
+                        )
+
+                    else -> TruvideoSdkCameraMode.VideoAndImage()
                 }
-                "video" -> {
-                    mode = TruvideoSdkCameraMode.video(
-                        maxCount = videoLimit?.toInt(),
-                        durationLimit = videoDurationLimit?.toInt()
+
+                "video" -> TruvideoSdkCameraMode.Video(
+                    maxCount = videoLimit!!.toInt(),
+                    durationLimit = videoDurationLimit!!.toLong()
+                )
+
+                "image" -> TruvideoSdkCameraMode.Image(
+                    maxCount = imageLimit!!.toInt()
+                )
+
+                "singleImage" ->
+                    TruvideoSdkCameraMode.SingleImage(autoClose = true)
+
+                "singleVideo" ->
+                    TruvideoSdkCameraMode.SingleVideo(
+                        durationLimit = videoDurationLimit!!.toLong(),
+                        autoClose = true
                     )
-                }
-                "image" -> {
-                    mode = TruvideoSdkCameraMode.image(
-                        maxCount = imageLimit?.toInt()
+
+                "singleVideoOrImage" ->
+                    TruvideoSdkCameraMode.SingleVideoOrImage(
+                        videoDurationLimit = videoDurationLimit!!.toLong(),
+                        autoClose = true
                     )
-                }
-                "singleImage" ->{
-                    mode = TruvideoSdkCameraMode.singleImage()
-                }
-                "singleVideo" ->{
-                    mode = TruvideoSdkCameraMode.singleVideo(
-                        durationLimit = videoDurationLimit?.toInt()
-                    )
-                }
-                "singleVideoOrImage" -> {
-                    mode = TruvideoSdkCameraMode.singleVideoOrImage(
-                        durationLimit = videoDurationLimit?.toInt()
-                    )
-                }
+
+                else -> mode
+//                "videoAndImage" -> {
+//                    if(imageLimit != null || videoLimit != null){
+//                        mode = TruvideoSdkCameraMode.videoAndImage(
+//                            imageMaxCount = imageLimit?.toInt(),
+//                            videoMaxCount = videoLimit?.toInt(),
+//                            durationLimit = videoDurationLimit?.toInt()
+//                        )
+//                    }else if(mediaLimit != null){
+//                        mode = TruvideoSdkCameraMode.videoAndImage(
+//                            maxCount = mediaLimit.toInt(),
+//                            durationLimit = videoDurationLimit?.toInt()
+//                        )
+//                    }else {
+//                        mode = TruvideoSdkCameraMode.videoAndImage()
+//                    }
+//                }
+//                "video" -> {
+//                    mode = TruvideoSdkCameraMode.video(
+//                        maxCount = videoLimit?.toInt(),
+//                        durationLimit = videoDurationLimit?.toInt()
+//                    )
+//                }
+//                "image" -> {
+//                    mode = TruvideoSdkCameraMode.image(
+//                        maxCount = imageLimit?.toInt()
+//                    )
+//                }
+//                "singleImage" ->{
+//                    mode = TruvideoSdkCameraMode.singleImage()
+//                }
+//                "singleVideo" ->{
+//                    mode = TruvideoSdkCameraMode.singleVideo(
+//                        durationLimit = videoDurationLimit?.toInt()
+//                    )
+//                }
+//                "singleVideoOrImage" -> {
+//                    mode = TruvideoSdkCameraMode.singleVideoOrImage(
+//                        durationLimit = videoDurationLimit?.toInt()
+//                    )
+//                }
             }
         }
     }

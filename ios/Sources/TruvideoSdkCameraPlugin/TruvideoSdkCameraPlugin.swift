@@ -100,8 +100,8 @@ public class TruvideoSdkCameraPlugin: CAPPlugin, CAPBridgedPlugin {
                                         }
                                     } else if key == "resolution", let resolution = value as? TruvideoSdkCamera.TruvideoSdkCameraResolution {
                                         sanitizedItem["resolution"] = [
-                                            "width": resolution.width,
-                                            "height": resolution.height
+                                            "width": resolution.rawValue,
+                                            "height": resolution.rawValue
                                         ]
                                     } else if JSONSerialization.isValidJSONObject([key: value]) {
                                         sanitizedItem[key] = value
@@ -178,8 +178,8 @@ public class TruvideoSdkCameraPlugin: CAPPlugin, CAPBridgedPlugin {
                 switch orientationString {
                 case "portrait":
                     orientation = .portrait
-                case "portraitReverse":
-                    orientation = .portraitReverse
+//                case "portraitReverse":
+//                    orientation = .portraitReverse
                 case "landscapeLeft":
                     orientation = .landscapeLeft
                 case "landscapeRight":
@@ -309,27 +309,29 @@ public class TruvideoSdkCameraPlugin: CAPPlugin, CAPBridgedPlugin {
     func initiateScannerCamera(viewController: UIViewController, _ completion: @escaping (_ cameraResult: TruvideoSdkCameraScannerCode) -> Void) {
         DispatchQueue.main.async {
             // Retrieving information about the device's camera functionality.
-            let cameraInfo: TruvideoSdkCameraInformation = TruvideoSdkCamera.camera.getTruvideoSdkCameraInformation()
-            print("Camera Info:", cameraInfo)
-            
-            let configuration = TruvideoSdkScannerCameraConfiguration(flashMode: .off,orientation: .portrait,codeFormats: [.code39,.codeQR], autoClose: false,validator: .none)
-            
-            DispatchQueue.main.async {
-                
-                self.subscribeToCameraEvents()
-                viewController.presentTruvideoSdkScannerCameraView(preset: configuration, onComplete: { result in
-                    if let result = result{
-                        completion(result)
-                    }
-                })
-            }
+//            let cameraInfo: TruvideoSdkCameraInformation = TruvideoSdkCamera.camera.getTruvideoSdkCameraInformation()
+//            print("Camera Info:", cameraInfo)
+//            
+//            let configuration = TruvideoSdkScannerCameraConfiguration(flashMode: .off,orientation: .portrait,codeFormats: [.code39,.codeQR], autoClose: false,validator: .none)
+//                reject("Scanner_Error", "Scanner not available in ios");
+//            DispatchQueue.main.async {
+//                
+//                self.subscribeToCameraEvents()
+//                viewController.presentTruvideoSdkScannerCameraView(preset: configuration, onComplete: { result in
+//                    if let result = result{
+//                        completion(result)
+//                    }
+//                })
+//            }
         }
     }
     // Resolution parser
     func parseResolution(_ dict: [String: Any]) -> TruvideoSdkCameraResolution {
         let width = dict["width"] as? Int ?? 0
         let height = dict["height"] as? Int ?? 0
-        return TruvideoSdkCameraResolution(width: Int32(width), height: Int32(height))
+//        return TruvideoSdkCameraResolution(width: Int32(width), height: Int32(height))
+        return TruvideoSdkCameraResolution(rawValue: TruvideoSdkCameraResolution.RawValue("0X0"))
+
     }
    
     // Arrays of resolutions
@@ -365,8 +367,8 @@ public class TruvideoSdkCameraPlugin: CAPPlugin, CAPBridgedPlugin {
             switch orientationString {
             case "portrait":
                 orientation = .portrait
-            case "portraitReverse":
-                orientation = .portraitReverse
+//            case "portraitReverse":
+//                orientation = .portraitReverse
             case "landscapeLeft":
                 orientation = .landscapeLeft
             case "landscapeRight":
@@ -484,18 +486,32 @@ public class TruvideoSdkCameraPlugin: CAPPlugin, CAPBridgedPlugin {
             }
             
             // Configuring the camera with various parameters based on specific requirements.
+//            let configuration = TruvideoSdkCameraConfiguration(
+//                lensFacing: lensType,
+//                flashMode: flashMode,
+//                orientation: orientation,
+//                outputPath: outputPathMain,
+//                frontResolutions: frontResolutions,
+//                frontResolution: frontResolution,
+//                backResolutions: backResolutions,
+//                backResolution: backResolution,
+//                mode: mode,
+//                imageFormat: imageFormat
+//            )
+            
             let configuration = TruvideoSdkCameraConfiguration(
-                lensFacing: lensType,
-                flashMode: flashMode,
-                orientation: orientation,
-                outputPath: outputPathMain,
-                frontResolutions: frontResolutions,
-                frontResolution: frontResolution,
-                backResolutions: backResolutions,
-                backResolution: backResolution,
-                mode: mode,
-                imageFormat: imageFormat
-            )
+                     backResolution: backResolution ?? .hd1920x1080,
+                     backResolutions: backResolutions,
+                     flashMode: flashMode,
+                     frontResolution: frontResolution ?? .hd1920x1080,
+                     frontResolutions: frontResolutions,
+                     imageFormat: imageFormat,
+                     lensFacing: lensType,
+                     mode: mode,
+                     orientation: orientation,
+       //              imageFormat: imageFormat,
+                     outputPath: outputPathMain
+                 )
             
             DispatchQueue.main.async {
                 rootViewController.presentTruvideoSdkCameraView(
