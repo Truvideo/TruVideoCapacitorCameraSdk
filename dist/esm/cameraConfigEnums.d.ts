@@ -6,11 +6,16 @@ export declare enum FlashMode {
     Off = "off",
     On = "on"
 }
+export declare enum StreamingUpload {
+    Off = "off",
+    On = "on"
+}
 export declare enum ImageFormat {
     JPEG = "jpeg",
     PNG = "png"
 }
 export declare enum Orientation {
+    Any = "any",
     Portrait = "portrait",
     LandscapeLeft = "landscapeLeft",
     LandscapeRight = "landscapeRight",
@@ -20,10 +25,19 @@ export declare enum CameraMediaType {
     image = "IMAGE",
     video = "VIDEO"
 }
+export declare enum ResolutionPreset {
+    SD = "640x480",
+    HD = "1280x720",
+    FHD = "1920x1080"
+}
 export interface Resolution {
     width: number;
     height: number;
 }
+export interface Resolutions {
+    [key: string]: ResolutionPreset;
+}
+export declare function getResolution(preset: ResolutionPreset): Resolution;
 export interface CameraResult {
     id: string;
     createdAt: number;

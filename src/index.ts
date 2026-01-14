@@ -1,7 +1,7 @@
 import { registerPlugin } from '@capacitor/core';
 
 import type { TruvideoSdkCameraPlugin } from './definitions';
-import { CameraMode, CameraResult, FlashMode, ImageFormat, LensFacing} from './cameraConfigEnums';
+import { CameraMode, CameraResult, FlashMode, ImageFormat, LensFacing } from './cameraConfigEnums';
 import { ARCameraConfiguration, ARConfiguration, CameraConfiguration, Configuration } from './CameraConfig';
 const TruvideoSdkCamera = registerPlugin<TruvideoSdkCameraPlugin>('TruvideoSdkCamera');
 
@@ -9,11 +9,11 @@ export * from './CameraConfig'
 export * from './cameraConfigEnums'
 
 function cleanObject(obj: any): any {
-  return Object.fromEntries(
-    Object.entries(obj).filter(([_, v]) => v !== null && v !== undefined)
-  );
+    return Object.fromEntries(
+        Object.entries(obj).filter(([_, v]) => v !== null && v !== undefined)
+    );
 }
- 
+
 function parsePluginResponse<T>(response: any, valueName: string = "result"): T {
     if (!response || typeof response !== "object") {
         throw new Error("Plugin response is not an object");
@@ -44,47 +44,53 @@ function parsePluginResponse<T>(response: any, valueName: string = "result"): T 
 
 
 export function initCameraScreen(
-  configuration: CameraConfiguration
+    configuration: CameraConfiguration
 ): Promise<{ value: string }> {
-  const cleanedConfig: Configuration = cleanObject({
-    lensFacing: configuration.lensFacing,
-    flashMode: configuration.flashMode,
-    orientation: configuration.orientation,
-    outputPath: configuration.outputPath,
-    frontResolution: configuration.frontResolution,
-    backResolution: configuration.backResolution,
-    frontResolutions: configuration.frontResolutions,
-    backResolutions: configuration.backResolutions,
-    mode: configuration.mode,
-    imageFormat: configuration.imageFormat
-  });
+    const cleanedConfig: Configuration = cleanObject({
+        lensFacing: configuration.lensFacing,
+        flashMode: configuration.flashMode,
+        StreamingUpload: configuration.streamingUpload,
+        orientation: configuration.orientation,
+        outputPath: configuration.outputPath,
+        defaultFrontResolution: configuration.defaultFrontResolution,
+        frontResolution: configuration.frontResolutions,
+        defaultBackResolution: configuration.defaultBackResolution,
+        backResolution: configuration.backResolutions,
+        frontResolutions: configuration.frontResolutions,
+        backResolutions: configuration.backResolutions,
+        mode: configuration.mode,
+        imageFormat: configuration.imageFormat
+    });
 
-  return TruvideoSdkCamera.initCameraScreen({
-    value: JSON.stringify(cleanedConfig)
-  });
+    return TruvideoSdkCamera.initCameraScreen({
+        value: JSON.stringify(cleanedConfig)
+    });
 }
 
 export async function initCameraScreenTS(configuration: CameraConfiguration): Promise<CameraResult[]> {
-  const cleanedConfig: Configuration = cleanObject({
-    lensFacing: configuration.lensFacing,
-    flashMode: configuration.flashMode,
-    orientation: configuration.orientation,
-    outputPath: configuration.outputPath,
-    frontResolution: configuration.frontResolution,
-    backResolution: configuration.backResolution,
-    frontResolutions: configuration.frontResolutions,
-    backResolutions: configuration.backResolutions,
-    mode: configuration.mode,
-    imageFormat: configuration.imageFormat
-  });
+    const cleanedConfig: Configuration = cleanObject({
+        lensFacing: configuration.lensFacing,
+        flashMode: configuration.flashMode,
+        orientation: configuration.orientation,
+        StreamingUpload: configuration.streamingUpload,
+        outputPath: configuration.outputPath,
+        defaultFrontResolution: configuration.defaultFrontResolution,
+        frontResolution: configuration.frontResolutions,
+        defaultBackResolution: configuration.defaultBackResolution,
+        backResolution: configuration.backResolutions,
+        frontResolutions: configuration.frontResolutions,
+        backResolutions: configuration.backResolutions,
+        mode: configuration.mode,
+        imageFormat: configuration.imageFormat
+    });
 
-  let response = await TruvideoSdkCamera.initCameraScreen({
-    value: JSON.stringify(cleanedConfig)
-  });
-  //let response = await TruvideoSdkMedia.getAllFileUploadRequests({ status : status || ''});
-  //return parsePluginResponse<MediaData[]>(response,"requests");
+    let response = await TruvideoSdkCamera.initCameraScreen({
+        value: JSON.stringify(cleanedConfig)
+    });
+    //let response = await TruvideoSdkMedia.getAllFileUploadRequests({ status : status || ''});
+    //return parsePluginResponse<MediaData[]>(response,"requests");
 
-  return parsePluginResponse<CameraResult[]>(response,"value");
+    return parsePluginResponse<CameraResult[]>(response, "value");
 }
 
 export function initARCameraScreen(
@@ -131,25 +137,25 @@ export async function initARCameraScreenTS(
     let response = await TruvideoSdkCamera.initARCameraScreen({
         value: JSON.stringify(cameraConfiguration)
     });
-  //let response = await TruvideoSdkMedia.getAllFileUploadRequests({ status : status || ''});
-  //return parsePluginResponse<MediaData[]>(response,"requests");
+    //let response = await TruvideoSdkMedia.getAllFileUploadRequests({ status : status || ''});
+    //return parsePluginResponse<MediaData[]>(response,"requests");
 
-    return parsePluginResponse<CameraResult[]>(response,"value");
+    return parsePluginResponse<CameraResult[]>(response, "value");
 }
 
 export function initScanerScreen(): Promise<{ value: string }> {
     const cleanedConfig: Configuration = cleanObject({
-            lensFacing: LensFacing.Back,
-            flashMode: FlashMode.Off,
-            orientation: null,
-            outputPath: "",
-            frontResolution: "",
-            backResolution: "",
-            frontResolutions: [],
-            backResolutions: [],
-            mode: CameraMode.videoAndImage(),
-            imageFormat: ImageFormat.JPEG
-        });
+        lensFacing: LensFacing.Back,
+        flashMode: FlashMode.Off,
+        orientation: null,
+        outputPath: "",
+        frontResolution: "",
+        backResolution: "",
+        frontResolutions: [],
+        backResolutions: [],
+        mode: CameraMode.videoAndImage(),
+        imageFormat: ImageFormat.JPEG
+    });
     return TruvideoSdkCamera.initScanerScreen({
         value: JSON.stringify(cleanedConfig)
     });

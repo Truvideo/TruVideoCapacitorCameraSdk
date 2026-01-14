@@ -1,27 +1,29 @@
-import { LensFacing, FlashMode, Orientation, CameraMode, Resolution,ImageFormat } from './cameraConfigEnums'
+import { LensFacing, FlashMode, Orientation, CameraMode, Resolution, ImageFormat, StreamingUpload, ResolutionPreset, Resolutions } from './cameraConfigEnums'
 
 export interface CameraConfiguration {
   lensFacing: LensFacing;
+  streamingUpload?: StreamingUpload;
   flashMode: FlashMode;
   orientation: Orientation;
   outputPath: string;
+  defaultFrontResolution?: ResolutionPreset;
   frontResolutions: Resolution[];
-  frontResolution: Resolution | null;
+  defaultBackResolution?: ResolutionPreset;
   backResolutions: Resolution[];
-  backResolution: Resolution | null;
   mode: CameraMode;
   imageFormat?: ImageFormat;
 };
 
 export interface Configuration {
   lensFacing: LensFacing;
+  streamingUpload?: StreamingUpload;
   flashMode: FlashMode;
   orientation: Orientation;
   outputPath: string;
-  frontResolutions: Resolution[] | "";
-  frontResolution: Resolution | "";
-  backResolutions: Resolution[] | "";
-  backResolution: Resolution | "";
+  defaultFrontResolution?: ResolutionPreset;
+  frontResolutions: Resolutions[];
+  defaultBackResolution?: ResolutionPreset;
+  backResolutions: Resolutions[];
   mode: CameraMode;
   imageFormat?: ImageFormat;
 }

@@ -8,12 +8,18 @@ export enum FlashMode {
   On = 'on',
 }
 
+export enum StreamingUpload {
+  Off = 'off',
+  On = 'on',
+}
+
 export enum ImageFormat {
   JPEG = 'jpeg',
   PNG = 'png',
 }
 
 export enum Orientation {
+  Any = 'any',
   Portrait = 'portrait',
   LandscapeLeft = 'landscapeLeft',
   LandscapeRight = 'landscapeRight',
@@ -24,10 +30,31 @@ export enum CameraMediaType {
   image = 'IMAGE',
   video = 'VIDEO',
 }
- 
+
+export enum ResolutionPreset {
+  SD = "640x480",
+  HD = "1280x720",
+  FHD = "1920x1080",
+}
+
 export interface Resolution {
   width: number;
   height: number;
+}
+
+export interface Resolutions {
+  [key: string]: ResolutionPreset;
+}
+
+export function getResolution(preset: ResolutionPreset): Resolution {
+  switch (preset) {
+    case ResolutionPreset.FHD:
+      return { width: 1920, height: 1080 };
+    case ResolutionPreset.HD:
+      return { width: 1280, height: 720 };
+    case ResolutionPreset.SD:
+      return { width: 640, height: 480 };
+  }
 }
 
 export interface CameraResult {
@@ -63,8 +90,8 @@ export class CameraMode {
     this.videoDurationLimit = videoDurationLimit != null ? videoDurationLimit.toString() : "";
     this.autoClose = autoClose;
   }
-  static singleMedia(mediaCount : number): CameraMode;
-  static singleMedia(mediaCount: number,durationLimit?: number, ): CameraMode;
+  static singleMedia(mediaCount: number): CameraMode;
+  static singleMedia(mediaCount: number, durationLimit?: number,): CameraMode;
   static singleMedia(
     mediaCount: number,
     durationLimit?: number
