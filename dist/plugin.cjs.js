@@ -35,22 +35,6 @@ exports.CameraMediaType = void 0;
     CameraMediaType["image"] = "IMAGE";
     CameraMediaType["video"] = "VIDEO";
 })(exports.CameraMediaType || (exports.CameraMediaType = {}));
-exports.ResolutionPreset = void 0;
-(function (ResolutionPreset) {
-    ResolutionPreset["SD"] = "640x480";
-    ResolutionPreset["HD"] = "1280x720";
-    ResolutionPreset["FHD"] = "1920x1080";
-})(exports.ResolutionPreset || (exports.ResolutionPreset = {}));
-function getResolution(preset) {
-    switch (preset) {
-        case exports.ResolutionPreset.FHD:
-            return { width: 1920, height: 1080 };
-        case exports.ResolutionPreset.HD:
-            return { width: 1280, height: 720 };
-        case exports.ResolutionPreset.SD:
-            return { width: 640, height: 480 };
-    }
-}
 class CameraMode {
     constructor(mode, videoLimit, imageLimit, mediaLimit, videoDurationLimit, autoClose) {
         this.videoLimit = "";
@@ -130,14 +114,12 @@ function parsePluginResponse(response, valueName = "result") {
 function initCameraScreen(configuration) {
     const cleanedConfig = cleanObject({
         lensFacing: configuration.lensFacing,
+        streamingUpload: configuration.streamingUpload,
         flashMode: configuration.flashMode,
-        StreamingUpload: configuration.streamingUpload,
         orientation: configuration.orientation,
         outputPath: configuration.outputPath,
-        defaultFrontResolution: configuration.defaultFrontResolution,
-        frontResolution: configuration.frontResolutions,
-        defaultBackResolution: configuration.defaultBackResolution,
-        backResolution: configuration.backResolutions,
+        frontResolution: configuration.frontResolution,
+        backResolution: configuration.backResolution,
         frontResolutions: configuration.frontResolutions,
         backResolutions: configuration.backResolutions,
         mode: configuration.mode,
@@ -151,13 +133,11 @@ async function initCameraScreenTS(configuration) {
     const cleanedConfig = cleanObject({
         lensFacing: configuration.lensFacing,
         flashMode: configuration.flashMode,
+        streamingUpload: configuration.streamingUpload,
         orientation: configuration.orientation,
-        StreamingUpload: configuration.streamingUpload,
         outputPath: configuration.outputPath,
-        defaultFrontResolution: configuration.defaultFrontResolution,
-        frontResolution: configuration.frontResolutions,
-        defaultBackResolution: configuration.defaultBackResolution,
-        backResolution: configuration.backResolutions,
+        frontResolution: configuration.frontResolution,
+        backResolution: configuration.backResolution,
         frontResolutions: configuration.frontResolutions,
         backResolutions: configuration.backResolutions,
         mode: configuration.mode,
@@ -247,7 +227,6 @@ function requestInstallAugmentedReality() {
 
 exports.CameraMode = CameraMode;
 exports.environment = environment;
-exports.getResolution = getResolution;
 exports.initARCameraScreen = initARCameraScreen;
 exports.initARCameraScreenTS = initARCameraScreenTS;
 exports.initCameraScreen = initCameraScreen;

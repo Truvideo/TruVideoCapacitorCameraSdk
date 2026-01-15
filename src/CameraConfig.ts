@@ -1,4 +1,4 @@
-import { LensFacing, FlashMode, Orientation, CameraMode, Resolution, ImageFormat, StreamingUpload, ResolutionPreset, Resolutions } from './cameraConfigEnums'
+import { LensFacing, FlashMode, Orientation, CameraMode, Resolution, ImageFormat, StreamingUpload } from './cameraConfigEnums'
 
 export interface CameraConfiguration {
   lensFacing: LensFacing;
@@ -6,10 +6,10 @@ export interface CameraConfiguration {
   flashMode: FlashMode;
   orientation: Orientation;
   outputPath: string;
-  defaultFrontResolution?: ResolutionPreset;
   frontResolutions: Resolution[];
-  defaultBackResolution?: ResolutionPreset;
+  frontResolution: Resolution | null;
   backResolutions: Resolution[];
+  backResolution: Resolution | null;
   mode: CameraMode;
   imageFormat?: ImageFormat;
 };
@@ -20,14 +20,13 @@ export interface Configuration {
   flashMode: FlashMode;
   orientation: Orientation;
   outputPath: string;
-  defaultFrontResolution?: ResolutionPreset;
-  frontResolutions: Resolutions[];
-  defaultBackResolution?: ResolutionPreset;
-  backResolutions: Resolutions[];
+  frontResolutions: Resolution[] | "";
+  frontResolution: Resolution | "";
+  backResolutions: Resolution[] | "";
+  backResolution: Resolution | "";
   mode: CameraMode;
   imageFormat?: ImageFormat;
 }
-
 
 export interface ARCameraConfiguration {
   outputPath: string;

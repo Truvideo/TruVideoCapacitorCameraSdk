@@ -31,22 +31,6 @@ export var CameraMediaType;
     CameraMediaType["image"] = "IMAGE";
     CameraMediaType["video"] = "VIDEO";
 })(CameraMediaType || (CameraMediaType = {}));
-export var ResolutionPreset;
-(function (ResolutionPreset) {
-    ResolutionPreset["SD"] = "640x480";
-    ResolutionPreset["HD"] = "1280x720";
-    ResolutionPreset["FHD"] = "1920x1080";
-})(ResolutionPreset || (ResolutionPreset = {}));
-export function getResolution(preset) {
-    switch (preset) {
-        case ResolutionPreset.FHD:
-            return { width: 1920, height: 1080 };
-        case ResolutionPreset.HD:
-            return { width: 1280, height: 720 };
-        case ResolutionPreset.SD:
-            return { width: 640, height: 480 };
-    }
-}
 export class CameraMode {
     constructor(mode, videoLimit, imageLimit, mediaLimit, videoDurationLimit, autoClose) {
         this.videoLimit = "";
