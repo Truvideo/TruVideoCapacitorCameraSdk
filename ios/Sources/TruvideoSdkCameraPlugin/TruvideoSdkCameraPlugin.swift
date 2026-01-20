@@ -175,18 +175,24 @@ public class TruvideoSdkCameraPlugin: CAPPlugin, CAPBridgedPlugin {
                 let videoLimit : String? = (modeData["videoLimit"] as? String).flatMap { $0.isEmpty ? nil : $0 }
                 let imageLimit : String? = (modeData["imageLimit"] as? String).flatMap { $0.isEmpty ? nil : $0 }
             
-                switch orientationString {
-                case "portrait":
-                    orientation = .portrait
+                if let orientationString = orientationString {
+                    switch orientationString.lowercased() {
+                    case "any":
+                        orientation = .portrait
+                    case "portrait":
+                        orientation = .portrait
 //                case "portraitReverse":
 //                    orientation = .portraitReverse
-                case "landscapeLeft":
-                    orientation = .landscapeLeft
-                case "landscapeRight":
-                    orientation = .landscapeRight
-                default:
-                    print("Unknown orientation:", orientationString)
-                    return
+                    case "landscapeleft":
+                        orientation = .landscapeLeft
+                    case "landscaperight":
+                        orientation = .landscapeRight
+                    default:
+                        print("Unknown orientation:", orientationString)
+                        orientation = .portrait
+                    }
+                } else {
+                    orientation = .portrait
                 }
                 switch mainMode {
                 case "videoAndImage":
@@ -348,7 +354,6 @@ public class TruvideoSdkCameraPlugin: CAPPlugin, CAPBridgedPlugin {
             guard let lensFacingString = configuration["lensFacing"] as? String,
                   let flashModeString = configuration["flashMode"] as? String,
                   let orientationString = configuration["orientation"] as? String,
-                  //  let outputPath = configuration["outputPath"] as? String,
                   let outputPath = configuration["outputPath"] as? String,
                   let imageFormatString = configuration["imageFormat"] as? String,
                   let modeString = configuration["mode"] as? [String:Any] else {
@@ -367,15 +372,12 @@ public class TruvideoSdkCameraPlugin: CAPPlugin, CAPBridgedPlugin {
             switch orientationString {
             case "portrait":
                 orientation = .portrait
-//            case "portraitReverse":
-//                orientation = .portraitReverse
             case "landscapeLeft":
                 orientation = .landscapeLeft
             case "landscapeRight":
                 orientation = .landscapeRight
             default:
-                print("Unknown orientation:", orientationString)
-                return
+                orientation = .portrait
             }
             
             let outputPathMain = if(outputPath != ""){
@@ -391,7 +393,6 @@ public class TruvideoSdkCameraPlugin: CAPPlugin, CAPBridgedPlugin {
                           imageFormat = .png
                         default:
                           imageFormat = .jpeg
-                        
                       }
             // Front Resolutions
               let frontResolutions: [TruvideoSdkCameraResolution] = {

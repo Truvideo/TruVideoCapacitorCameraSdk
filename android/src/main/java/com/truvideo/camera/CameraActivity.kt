@@ -2,6 +2,7 @@ package com.truvideo.camera
 
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -32,6 +33,7 @@ import com.truvideo.sdk.camera.ui.activities.arcamera.TruvideoSdkArCameraContrac
 import com.truvideo.sdk.camera.ui.activities.scanner.TruvideoSdkCameraScannerContract
 import kotlinx.coroutines.launch
 import org.json.JSONArray
+import kotlin.math.log
 
 class CameraActivity : ComponentActivity() {
     private var configuration = ""
@@ -297,6 +299,7 @@ class CameraActivity : ComponentActivity() {
             videoStabilizationEnabled = videoStabilizationEnabled
         )
 
+        Log.d("configuration_tag","$configuration")
         cameraScreen.launch(configuration)
 
     }
@@ -371,7 +374,7 @@ class CameraActivity : ComponentActivity() {
             when(jsonMode.getString("mode")) {
                 "videoAndImage" -> when {
                     videoDurationLimit != null && mediaLimit != null ->
-                        TruvideoSdkCameraMode.VideoAndImage(
+                        mode = TruvideoSdkCameraMode.VideoAndImage(
                             limit = TruvideoSdkCameraMode.VideoAndImage.Limit.ByTotal(
                                 maxMediaCount = mediaLimit.toInt()
                             ),
@@ -379,7 +382,7 @@ class CameraActivity : ComponentActivity() {
                         )
 
                     videoDurationLimit != null && videoLimit != null && imageLimit != null ->
-                        TruvideoSdkCameraMode.VideoAndImage(
+                        mode = TruvideoSdkCameraMode.VideoAndImage(
                             limit = TruvideoSdkCameraMode.VideoAndImage.Limit.ByType(
                                 maxImageCount = imageLimit.toInt(),
                                 maxVideoCount = videoLimit.toInt()
@@ -388,36 +391,46 @@ class CameraActivity : ComponentActivity() {
                         )
 
                     videoDurationLimit != null ->
-                        TruvideoSdkCameraMode.VideoAndImage(
+                        mode = TruvideoSdkCameraMode.VideoAndImage(
                             videoDurationLimit = videoDurationLimit.toLong()
                         )
 
-                    else -> TruvideoSdkCameraMode.VideoAndImage()
+                    else -> mode = TruvideoSdkCameraMode.VideoAndImage()
                 }
 
-                "video" -> TruvideoSdkCameraMode.Video(
-                    maxCount = videoLimit!!.toInt(),
-                    durationLimit = videoDurationLimit!!.toLong()
+                "video" -> mode = TruvideoSdkCameraMode.Video(
+                    maxCount = videoLimit?.toInt(),
+                    durationLimit = videoDurationLimit?.toLong()
                 )
 
-                "image" -> TruvideoSdkCameraMode.Image(
-                    maxCount = imageLimit!!.toInt()
+                "image" -> mode = TruvideoSdkCameraMode.Image(
+                    maxCount = imageLimit?.toInt()
                 )
 
                 "singleImage" ->
-                    TruvideoSdkCameraMode.SingleImage(autoClose = true)
+                    mode = TruvideoSdkCameraMode.SingleImage(autoClose = true)
 
                 "singleVideo" ->
-                    TruvideoSdkCameraMode.SingleVideo(
-                        durationLimit = videoDurationLimit!!.toLong(),
+                    mode = TruvideoSdkCameraMode.SingleVideo(
+                        durationLimit = videoDurationLimit?.toLong(),
                         autoClose = true
                     )
 
-                "singleVideoOrImage" ->
-                    TruvideoSdkCameraMode.SingleVideoOrImage(
-                        videoDurationLimit = videoDurationLimit!!.toLong(),
-                        autoClose = true
-                    )
+                "singleVideoOrImage" -> {
+                    if(videoDurationLimit == null){
+                        mode = TruvideoSdkCameraMode.SingleVideoOrImage(
+                            autoClose = true
+                        )
+                    }else{
+                        mode = TruvideoSdkCameraMode.SingleVideoOrImage(
+                            videoDurationLimit = videoDurationLimit.toLong(),
+                            autoClose = true
+                        )
+                    }
+
+
+                }
+
 
                 else -> mode
 //                "videoAndImage" -> {
