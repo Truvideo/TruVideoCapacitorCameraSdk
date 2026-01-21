@@ -32,11 +32,12 @@ export interface ARCameraConfiguration {
   outputPath: string;
   orientation: Orientation;
   mode: CameraMode;
-  flashMode: FlashMode;
+  flashMode?: FlashMode;
 }
 
 export interface ARConfiguration {
   outputPath: string;
   orientation: Orientation;
   mode: string;
+  flashMode?: FlashMode;
 }
