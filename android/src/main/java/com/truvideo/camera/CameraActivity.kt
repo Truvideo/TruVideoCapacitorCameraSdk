@@ -4,25 +4,23 @@ import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.ActivityResultLauncher
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.getcapacitor.JSObject
-import com.truvideo.camera.ui.theme.AndroidTheme
-import com.truvideo.sdk.camera.TruvideoSdkCamera
-import com.truvideo.sdk.camera.model.TruvideoSdkCameraFlashMode
-import com.truvideo.sdk.camera.model.TruvideoSdkCameraLensFacing
-import com.truvideo.sdk.camera.model.TruvideoSdkCameraOrientation
-import com.truvideo.sdk.camera.model.TruvideoSdkCameraResolution
-import com.truvideo.sdk.camera.ui.activities.camera.TruvideoSdkCameraContract
-import org.json.JSONObject
+import com.getcapacitor.plugin.util.HttpRequestHandler.request
 import com.google.gson.Gson
+import com.truvideo.sdk.camera.TruvideoSdkCamera
 import com.truvideo.sdk.camera.interfaces.TruvideoSdkCameraScannerValidation
 import com.truvideo.sdk.camera.model.TruvideoSdkArCameraConfiguration
+import com.truvideo.sdk.camera.model.TruvideoSdkCameraFlashMode
 import com.truvideo.sdk.camera.model.TruvideoSdkCameraImageFormat
+import com.truvideo.sdk.camera.model.TruvideoSdkCameraLensFacing
+import com.truvideo.sdk.camera.model.TruvideoSdkCameraMedia
+import com.truvideo.sdk.camera.model.TruvideoSdkCameraOrientation
+import com.truvideo.sdk.camera.model.TruvideoSdkCameraResolution
 import com.truvideo.sdk.camera.model.TruvideoSdkCameraScannerCode
 import com.truvideo.sdk.camera.model.TruvideoSdkCameraScannerConfiguration
 import com.truvideo.sdk.camera.model.TruvideoSdkCameraScannerValidationResult
@@ -30,10 +28,13 @@ import com.truvideo.sdk.camera.model.external.TruvideoSdkCameraConfiguration
 import com.truvideo.sdk.camera.model.external.TruvideoSdkCameraEvent
 import com.truvideo.sdk.camera.model.external.TruvideoSdkCameraMode
 import com.truvideo.sdk.camera.ui.activities.arcamera.TruvideoSdkArCameraContract
+import com.truvideo.sdk.camera.ui.activities.camera.TruvideoSdkCameraContract
 import com.truvideo.sdk.camera.ui.activities.scanner.TruvideoSdkCameraScannerContract
 import kotlinx.coroutines.launch
 import org.json.JSONArray
-import kotlin.math.log
+import org.json.JSONException
+import org.json.JSONObject
+
 
 class CameraActivity : ComponentActivity() {
     private var configuration = ""
@@ -51,9 +52,6 @@ class CameraActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        setContent {
-            AndroidTheme {}
-        }
         getEvent()
         if(intent.hasExtra("from")){
             from = intent.getStringExtra("from")!!
@@ -73,11 +71,36 @@ class CameraActivity : ComponentActivity() {
         val cameraScreen = registerForActivityResult(TruvideoSdkCameraContract()){
             // value
             val ret = JSObject()
-            ret.put("value",Gson().toJson(it))
+            ret.put("value",cameraResults(it))
             TruvideoSdkCameraPlugin.pluginCall.resolve(ret)
             finish()
         }
         openCamera(this@CameraActivity,cameraScreen)
+    }
+
+    fun cameraResults(result : List<TruvideoSdkCameraMedia>) : String{
+        val array = JSONArray()
+        for (r in result) {
+            val jsonString: String = cameraResult(r)
+            try {
+                array.put(JSONObject(jsonString))
+            } catch (e: JSONException) {
+                e.printStackTrace()
+            }
+        }
+        return array.toString()
+    }
+    fun cameraResult(result : TruvideoSdkCameraMedia) : String{
+        val map: MutableMap<String, Any> = HashMap<String, Any>()
+        map["id"] = result.id
+        map["createdAt"] = result.createdAt
+        map["filePath"] = result.filePath
+        map["type"] = result.type.name
+        map["lensFacing"] = result.lensFacing.name
+        map["orientation"] = result.orientation.name
+        map["resolution"] = result.resolution
+        map["duration"] = result.duration/1000
+        return Gson().toJson(map)
     }
     fun getEvent(){
         lifecycleScope.launch {
