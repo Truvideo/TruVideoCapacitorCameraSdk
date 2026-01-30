@@ -182,7 +182,7 @@ class CameraActivity : ComponentActivity() {
                             limit = TruvideoSdkCameraMode.VideoAndImage.Limit.ByTotal(
                                 maxMediaCount = mediaLimit.toInt()
                             ),
-                            videoDurationLimit = videoDurationLimit.toLong()
+                            videoDurationLimit = videoDurationLimit.toLong()*1000
                         )
 
                     videoDurationLimit != null && videoLimit != null && imageLimit != null ->
@@ -191,12 +191,12 @@ class CameraActivity : ComponentActivity() {
                                 maxImageCount = imageLimit.toInt(),
                                 maxVideoCount = videoLimit.toInt()
                             ),
-                            videoDurationLimit = videoDurationLimit.toLong()
+                            videoDurationLimit = videoDurationLimit.toLong()*1000
                         )
 
                     videoDurationLimit != null ->
                         TruvideoSdkCameraMode.VideoAndImage(
-                            videoDurationLimit = videoDurationLimit.toLong()
+                            videoDurationLimit = videoDurationLimit.toLong()*1000
                         )
 
                     else -> TruvideoSdkCameraMode.VideoAndImage()
@@ -204,7 +204,7 @@ class CameraActivity : ComponentActivity() {
 
                 "video" -> TruvideoSdkCameraMode.Video(
                     maxCount = videoLimit!!.toInt(),
-                    durationLimit = videoDurationLimit!!.toLong()
+                    durationLimit = videoDurationLimit!!.toLong()*1000
                 )
 
                 "image" -> TruvideoSdkCameraMode.Image(
@@ -216,13 +216,13 @@ class CameraActivity : ComponentActivity() {
 
                 "singleVideo" ->
                     TruvideoSdkCameraMode.SingleVideo(
-                        durationLimit = videoDurationLimit!!.toLong(),
+                        durationLimit = videoDurationLimit!!.toLong()*1000,
                         autoClose = true
                     )
 
                 "singleVideoOrImage" ->
                     TruvideoSdkCameraMode.SingleVideoOrImage(
-                        videoDurationLimit = videoDurationLimit!!.toLong(),
+                        videoDurationLimit = videoDurationLimit!!.toLong()*1000,
                         autoClose = true
                     )
 
@@ -401,7 +401,7 @@ class CameraActivity : ComponentActivity() {
                             limit = TruvideoSdkCameraMode.VideoAndImage.Limit.ByTotal(
                                 maxMediaCount = mediaLimit.toInt()
                             ),
-                            videoDurationLimit = videoDurationLimit.toLong()
+                            videoDurationLimit = videoDurationLimit.toLong()*1000
                         )
 
                     videoDurationLimit != null && videoLimit != null && imageLimit != null ->
@@ -410,12 +410,12 @@ class CameraActivity : ComponentActivity() {
                                 maxImageCount = imageLimit.toInt(),
                                 maxVideoCount = videoLimit.toInt()
                             ),
-                            videoDurationLimit = videoDurationLimit.toLong()
+                            videoDurationLimit = videoDurationLimit.toLong()*1000
                         )
 
                     videoDurationLimit != null ->
                         mode = TruvideoSdkCameraMode.VideoAndImage(
-                            videoDurationLimit = videoDurationLimit.toLong()
+                            videoDurationLimit = videoDurationLimit.toLong()*1000
                         )
 
                     else -> mode = TruvideoSdkCameraMode.VideoAndImage()
@@ -423,7 +423,8 @@ class CameraActivity : ComponentActivity() {
 
                 "video" -> mode = TruvideoSdkCameraMode.Video(
                     maxCount = videoLimit?.toInt(),
-                    durationLimit = videoDurationLimit?.toLong()
+                    durationLimit = if(videoDurationLimit != null) { videoDurationLimit.toLong()*1000
+                        }else { 0.toLong() }
                 )
 
                 "image" -> mode = TruvideoSdkCameraMode.Image(
@@ -435,7 +436,12 @@ class CameraActivity : ComponentActivity() {
 
                 "singleVideo" ->
                     mode = TruvideoSdkCameraMode.SingleVideo(
-                        durationLimit = videoDurationLimit?.toLong(),
+                        durationLimit = if(videoDurationLimit != null) {
+                            videoDurationLimit.toLong()*1000
+                        }else
+                        {
+                            0.toLong()
+                        },
                         autoClose = true
                     )
 
@@ -446,7 +452,7 @@ class CameraActivity : ComponentActivity() {
                         )
                     }else{
                         mode = TruvideoSdkCameraMode.SingleVideoOrImage(
-                            videoDurationLimit = videoDurationLimit.toLong(),
+                            videoDurationLimit = videoDurationLimit.toLong()*1000,
                             autoClose = true
                         )
                     }
