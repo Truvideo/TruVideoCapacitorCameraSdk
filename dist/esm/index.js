@@ -71,6 +71,7 @@ export async function initCameraScreenTS(configuration) {
 export function initARCameraScreen(configuration) {
     let data = {
         mode: configuration.mode.mode,
+        flashMode: configuration.flashMode,
         videoLimit: configuration.mode.videoLimit,
         imageLimit: configuration.mode.imageLimit,
         mediaLimit: configuration.mode.mediaLimit,
@@ -89,6 +90,7 @@ export function initARCameraScreen(configuration) {
 export async function initARCameraScreenTS(configuration) {
     let data = {
         mode: configuration.mode.mode,
+        flashMode: configuration.flashMode,
         videoLimit: configuration.mode.videoLimit,
         imageLimit: configuration.mode.imageLimit,
         mediaLimit: configuration.mode.mediaLimit,

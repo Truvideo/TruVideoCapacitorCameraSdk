@@ -152,6 +152,7 @@ var capacitorTruvideoSdkCamera = (function (exports, core) {
     function initARCameraScreen(configuration) {
         let data = {
             mode: configuration.mode.mode,
+            flashMode: configuration.flashMode,
             videoLimit: configuration.mode.videoLimit,
             imageLimit: configuration.mode.imageLimit,
             mediaLimit: configuration.mode.mediaLimit,
@@ -170,6 +171,7 @@ var capacitorTruvideoSdkCamera = (function (exports, core) {
     async function initARCameraScreenTS(configuration) {
         let data = {
             mode: configuration.mode.mode,
+            flashMode: configuration.flashMode,
             videoLimit: configuration.mode.videoLimit,
             imageLimit: configuration.mode.imageLimit,
             mediaLimit: configuration.mode.mediaLimit,

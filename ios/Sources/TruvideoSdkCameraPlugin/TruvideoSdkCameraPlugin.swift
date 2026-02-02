@@ -150,134 +150,143 @@ public class TruvideoSdkCameraPlugin: CAPPlugin, CAPBridgedPlugin {
      */
     
     @objc public func initARCameraScreen(_ call: CAPPluginCall) {
-        let configuration = call.getString("configuration") ?? ""
-        guard let rootViewController = UIApplication.shared.keyWindow?.rootViewController else {
-            print("E_NO_ROOT_VIEW_CONTROLLER", "No root view controller found")
-            return
-        }
-        guard let data = configuration.data(using: .utf8) else {
-            print("Invalid JSON string")
-            call.reject("Invalid_Data", "Invalid JSON string", NSError(domain: "Invalid_Data", code: 400, userInfo: nil))
-            return
-        }
-        var orientation: TruvideoSdkCameraOrientation? = nil
-        var mode: TruvideoSdkCameraMediaMode = .videoAndPicture()
-        do{
-            if let jsonConfig = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any] {
-                let modeString = jsonConfig["mode"] as? String;
-                let orientationString = jsonConfig["orientation"] as? String;
-                
-                guard let data = modeString?.data(using: .utf8) else { return }
-                let modeData = try JSONSerialization.jsonObject(with: data, options: []) as! [String: Any]
-                let mainMode  = modeData["mode"] as? String;
-                let videoDurationLimit : String? = (modeData["videoDurationLimit"] as? String).flatMap { $0.isEmpty ? nil : $0 }
-                let mediaLimit : String? = (modeData["mediaLimit"] as? String).flatMap { $0.isEmpty ? nil : $0 }
-                let videoLimit : String? = (modeData["videoLimit"] as? String).flatMap { $0.isEmpty ? nil : $0 }
-                let imageLimit : String? = (modeData["imageLimit"] as? String).flatMap { $0.isEmpty ? nil : $0 }
-            
-                if let orientationString = orientationString {
-                    switch orientationString.lowercased() {
-                    case "any":
-                        orientation = .portrait
-                    case "portrait":
-                        orientation = .portrait
-//                case "portraitReverse":
-//                    orientation = .portraitReverse
-                    case "landscapeleft":
-                        orientation = .landscapeLeft
-                    case "landscaperight":
-                        orientation = .landscapeRight
-                    default:
-                        print("Unknown orientation:", orientationString)
-                        orientation = .portrait
-                    }
-                } else {
-                    orientation = .portrait
-                }
-                switch mainMode {
-                case "videoAndImage":
-                  if videoLimit != nil || imageLimit != nil {
-                    mode = .videoAndPicture(
-                      videoCount: videoLimit.flatMap { Int($0) },
-                      pictureCount: imageLimit.flatMap { Int($0) },
-                      videoDuration: videoDurationLimit.flatMap { Int($0) }
-                    )
-                  }else if mediaLimit != nil {
-                    let mediaLimitInt = Int(mediaLimit ?? "0") ?? 0
-                    mode = .videoAndPicture(
-                      mediaCount: mediaLimitInt,
-                      videoDuration: videoDurationLimit.flatMap { Int($0) }
-                    )
-                  }else {
-                    mode = .videoAndPicture()
-                  }
-                case "video":
-                  mode = .video(
-                    videoCount :videoLimit.flatMap { Int($0) },
-                    videoDuration: videoDurationLimit.flatMap { Int($0) }
-                  )
-                case "image":
-                  mode = .picture(
-                    pictureCount :imageLimit.flatMap { Int($0) }
-                  )
-                case "singleImage":
-                    mode = .singlePicture()
-                case "singleVideo":
-                  mode = .singleVideo(
-                    videoDuration : videoDurationLimit.flatMap { Int($0) }
-                  )
-                case "singleVideoOrImage":
-                  mode = .singleVideoOrPicture(
-                    videoDuration : videoDurationLimit.flatMap { Int($0) }
-                  )
- 
-                default:
-                    break
-                }
+        DispatchQueue.main.async{
+            let configuration = call.getString("value") ?? ""
+            print("configuration====>AR:",configuration)
+            guard let rootViewController = UIApplication.shared.keyWindow?.rootViewController else {
+                print("E_NO_ROOT_VIEW_CONTROLLER", "No root view controller found")
+                return
             }
-        }catch{
+            guard let data = configuration.data(using: .utf8) else {
+                print("Invalid JSON string")
+                call.reject("Invalid_Data", "Invalid JSON string", NSError(domain: "Invalid_Data", code: 400, userInfo: nil))
+                return
+            }
             
-        }
-        
-        initiateARCamera(viewController: rootViewController,mode : mode, orientation : orientation){cameraResult in
-            do {
-                let cameraResultDict = cameraResult.toDictionary()
-                if let mediaData = cameraResultDict["media"] as? [[String: Any]] {
-                    var sanitizedMediaData: [[String: Any]] = []
+            var flashMode: TruvideoSdkCameraFlashMode = .off
+            var orientation: TruvideoSdkCameraOrientation? = nil
+            var mode: TruvideoSdkCameraMediaMode = .videoAndPicture(videoCount: 100,pictureCount: 200,videoDuration: 2000000)
+            
+            do{
+                if let jsonConfig = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any] {
+                    let modeString = jsonConfig["mode"] as? String;
+                    let orientationString = jsonConfig["orientation"] as? String;
+                    let flashModeString = jsonConfig["flashMode"] as? String;
+                    guard let data = modeString?.data(using: .utf8) else { return }
+                    let modeData = try JSONSerialization.jsonObject(with: data, options: []) as! [String: Any]
+                    let mainMode  = modeData["mode"] as? String;
+                    let videoDurationLimit : String? = (modeData["videoDurationLimit"] as? String).flatMap { $0.isEmpty ? nil : $0 }
+                    let mediaLimit : String? = (modeData["mediaLimit"] as? String).flatMap { $0.isEmpty ? nil : $0 }
+                    let videoLimit : String? = (modeData["videoLimit"] as? String).flatMap { $0.isEmpty ? nil : $0 }
+                    let imageLimit : String? = (modeData["imageLimit"] as? String).flatMap { $0.isEmpty ? nil : $0 }
                     
-                    for item in mediaData {
-                        var sanitizedItem: [String: Any] = [:]
-                        for (key, value) in item {
-                            if key == "type" {
-                                if (value as AnyObject).description == "TruvideoSdkCamera.TruvideoSdkCameraMediaType.photo"  {
-                                    sanitizedItem["type"] = "PICTURE"
+                    
+                    print("flashModeString ------ > ",flashModeString);
+                    
+                    flashMode = flashModeString == "on" ? .on: .off
+                    
+                    
+                    if let orientationString = orientationString {
+                        switch orientationString.lowercased() {
+                        case "portrait":
+                            orientation = .portrait
+                        case "landscapeleft":
+                            orientation = .landscapeLeft
+                        case "landscaperight":
+                            orientation = .landscapeRight
+                        default:
+                            orientation = nil
+                        }
+                    } else {
+                        orientation = nil
+                    }
+                    
+                    switch mainMode {
+                    case "videoAndImage":
+                        if videoLimit != nil || imageLimit != nil {
+                            mode = .videoAndPicture(
+                                videoCount: videoLimit.flatMap { Int($0) },
+                                pictureCount: imageLimit.flatMap { Int($0) },
+                                videoDuration: videoDurationLimit.flatMap { Int($0) }
+                            )
+                        }else if mediaLimit != nil {
+                            let mediaLimitInt = Int(mediaLimit ?? "0") ?? 0
+                            mode = .videoAndPicture(
+                                mediaCount: mediaLimitInt,
+                                videoDuration: videoDurationLimit.flatMap { Int($0) }
+                            )
+                        }else {
+                            mode = .videoAndPicture(videoCount: 100,pictureCount: 200,videoDuration: 2000000)
+                            
+                        }
+                    case "video":
+                        mode = .video(
+                            videoCount :videoLimit.flatMap { Int($0) },
+                            videoDuration: videoDurationLimit.flatMap { Int($0) }
+                        )
+                    case "image":
+                        mode = .picture(
+                            pictureCount :imageLimit.flatMap { Int($0) }
+                        )
+                    case "singleImage":
+                        mode = .singlePicture()
+                    case "singleVideo":
+                        mode = .singleVideo(
+                            videoDuration : videoDurationLimit.flatMap { Int($0) }
+                        )
+                    case "singleVideoOrImage":
+                        mode = .singleVideoOrPicture(
+                            videoDuration : videoDurationLimit.flatMap { Int($0) }
+                        )
+                        
+                    default:
+                        break
+                    }
+                }
+            }catch{
+                print("fail")
+            }
+            
+            self.initiateARCamera(viewController: rootViewController,mode : mode, orientation : orientation , flashMode: flashMode){cameraResult in
+                do {
+                    let cameraResultDict = cameraResult.toDictionary()
+                    if let mediaData = cameraResultDict["media"] as? [[String: Any]] {
+                        var sanitizedMediaData: [[String: Any]] = []
+                        
+                        for item in mediaData {
+                            var sanitizedItem: [String: Any] = [:]
+                            for (key, value) in item {
+                                if key == "type" {
+                                    if (value as AnyObject).description == "TruvideoSdkCamera.TruvideoSdkCameraMediaType.photo"  {
+                                        sanitizedItem["type"] = "PICTURE"
+                                    } else {
+                                        sanitizedItem["type"] = "VIDEO"
+                                    }
+                                }
+                                if JSONSerialization.isValidJSONObject([key: value]) {
+                                    sanitizedItem[key] = value
+                                } else if let value = value as? CustomStringConvertible {
+                                    sanitizedItem[key] = value.description
                                 } else {
-                                    sanitizedItem["type"] = "VIDEO"
+                                    print("Skipping invalid JSON value for key: \(key)")
                                 }
                             }
-                            if JSONSerialization.isValidJSONObject([key: value]) {
-                                sanitizedItem[key] = value
-                            } else if let value = value as? CustomStringConvertible {
-                                sanitizedItem[key] = value.description
-                            } else {
-                                print("Skipping invalid JSON value for key: \(key)")
-                            }
+                            sanitizedMediaData.append(sanitizedItem)
                         }
-                        sanitizedMediaData.append(sanitizedItem)
+                        
+                        if let jsonData = try? JSONSerialization.data(withJSONObject: sanitizedMediaData, options: []),
+                           let jsonString = String(data: jsonData, encoding: .utf8) {
+                            print("📤 Camera Result JSON:", jsonString)
+                            print("📤 Camera Result JSON:", sanitizedMediaData)
+                            call.resolve(["result": sanitizedMediaData])
+                        } else {
+                            call.reject("Serialization_Error", "Failed to serialize camera result")
+                        }
                     }
-                    
-                    if let jsonData = try? JSONSerialization.data(withJSONObject: sanitizedMediaData, options: []),
-                       let jsonString = String(data: jsonData, encoding: .utf8) {
-                        print("📤 Camera Result JSON:", jsonString)
-                        print("📤 Camera Result JSON:", sanitizedMediaData)
-                        call.resolve(["result": sanitizedMediaData])
-                    } else {
-                        call.reject("Serialization_Error", "Failed to serialize camera result")
-                    }
+                } catch {
+                    print("Error serializing camera result: \(error.localizedDescription)")
+                    call.reject("Serialization_Error", "Error serializing camera result", error)
                 }
-            } catch {
-                print("Error serializing camera result: \(error.localizedDescription)")
-                call.reject("Serialization_Error", "Error serializing camera result", error)
             }
         }
         
@@ -285,12 +294,14 @@ public class TruvideoSdkCameraPlugin: CAPPlugin, CAPBridgedPlugin {
     func initiateARCamera(viewController: UIViewController,
                           mode : TruvideoSdkCameraMediaMode,
                           orientation :TruvideoSdkCameraOrientation?,
+                          flashMode : TruvideoSdkCameraFlashMode,
                           completion: @escaping (_ cameraResult: TruvideoSdkCameraResult) -> Void)  {
         DispatchQueue.main.async {
             // Retrieving information about the device's camera functionality.
             let cameraInfo: TruvideoSdkCameraInformation = TruvideoSdkCamera.camera.getTruvideoSdkCameraInformation()
             print("Camera Info:", cameraInfo)
-            let configuration = TruvideoSdkARCameraConfiguration(flashMode: .on,mode: mode, orientation: orientation)
+            print(":::::flashMode::::::",flashMode.rawValue)
+            let configuration = TruvideoSdkARCameraConfiguration(flashMode: flashMode,mode: mode, orientation: orientation)
             DispatchQueue.main.async {
                 self.subscribeToCameraEvents()
                 viewController.presentTruvideoSdkARCameraView(preset: configuration, onComplete: { result in
