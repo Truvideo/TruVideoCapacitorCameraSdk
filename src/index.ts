@@ -94,7 +94,6 @@ export function initARCameraScreen(
 ): Promise<{ value: string }> {
     let data = {
         mode: configuration.mode.mode,
-        flashMode: configuration.flashMode,
         videoLimit: configuration.mode.videoLimit,
         imageLimit: configuration.mode.imageLimit,
         mediaLimit: configuration.mode.mediaLimit,
@@ -103,6 +102,7 @@ export function initARCameraScreen(
     };
     var cameraConfiguration: ARConfiguration = {
         outputPath: configuration.outputPath,
+        flashMode: configuration.flashMode,
         orientation: configuration.orientation,
         mode: JSON.stringify(data),
     }
@@ -116,7 +116,6 @@ export async function initARCameraScreenTS(
 ): Promise<CameraResult[]> {
     let data = {
         mode: configuration.mode.mode,
-        flashMode: configuration.flashMode,
         videoLimit: configuration.mode.videoLimit,
         imageLimit: configuration.mode.imageLimit,
         mediaLimit: configuration.mode.mediaLimit,
@@ -125,6 +124,7 @@ export async function initARCameraScreenTS(
     };
     var cameraConfiguration: ARConfiguration = {
         outputPath: configuration.outputPath,
+        flashMode: configuration.flashMode,
         orientation: configuration.orientation,
         mode: JSON.stringify(data),
     }

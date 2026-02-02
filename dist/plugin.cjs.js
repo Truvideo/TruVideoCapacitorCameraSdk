@@ -153,7 +153,6 @@ async function initCameraScreenTS(configuration) {
 function initARCameraScreen(configuration) {
     let data = {
         mode: configuration.mode.mode,
-        flashMode: configuration.flashMode,
         videoLimit: configuration.mode.videoLimit,
         imageLimit: configuration.mode.imageLimit,
         mediaLimit: configuration.mode.mediaLimit,
@@ -162,6 +161,7 @@ function initARCameraScreen(configuration) {
     };
     var cameraConfiguration = {
         outputPath: configuration.outputPath,
+        flashMode: configuration.flashMode,
         orientation: configuration.orientation,
         mode: JSON.stringify(data),
     };
@@ -172,7 +172,6 @@ function initARCameraScreen(configuration) {
 async function initARCameraScreenTS(configuration) {
     let data = {
         mode: configuration.mode.mode,
-        flashMode: configuration.flashMode,
         videoLimit: configuration.mode.videoLimit,
         imageLimit: configuration.mode.imageLimit,
         mediaLimit: configuration.mode.mediaLimit,
@@ -181,6 +180,7 @@ async function initARCameraScreenTS(configuration) {
     };
     var cameraConfiguration = {
         outputPath: configuration.outputPath,
+        flashMode: configuration.flashMode,
         orientation: configuration.orientation,
         mode: JSON.stringify(data),
     };
