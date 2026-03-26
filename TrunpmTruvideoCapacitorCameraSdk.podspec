@@ -14,6 +14,5 @@ Pod::Spec.new do |s|
   s.ios.deployment_target = '14.0'
   s.dependency 'Capacitor'
   s.swift_version = '5.1'
-  s.dependency 'truvideo-sdk-camera', '79.0.0'
-  s.dependency 'truvideo-sdk-core'
+  s.dependency 'truvideo-sdk-core/Camera', '79.0.0'
 end
