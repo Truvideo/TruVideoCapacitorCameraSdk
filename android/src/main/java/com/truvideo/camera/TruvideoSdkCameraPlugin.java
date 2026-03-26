@@ -11,6 +11,7 @@ import com.getcapacitor.PluginMethod;
 import com.getcapacitor.annotation.CapacitorPlugin;
 import com.truvideo.sdk.camera.TruvideoSdkCamera;
 
+
 @CapacitorPlugin(name = "TruvideoSdkCamera")
 public class TruvideoSdkCameraPlugin extends Plugin implements NotifyJs {
 
@@ -29,7 +30,7 @@ public class TruvideoSdkCameraPlugin extends Plugin implements NotifyJs {
 
     @PluginMethod
     public void requestInstallAugmentedReality(PluginCall call) {
-        TruvideoSdkCamera.TruvideoSdkCamera.requestInstallAugmentedReality(getActivity());
+        TruvideoSdkCamera.getInstance().requestInstallAugmentedReality(getActivity());
     }
     @PluginMethod
     public void initARCameraScreen(PluginCall call){
@@ -49,7 +50,7 @@ public class TruvideoSdkCameraPlugin extends Plugin implements NotifyJs {
 
     @PluginMethod
     public void version(PluginCall call){
-        String isAuth = TruvideoSdkCamera.TruvideoSdkCamera.getVersion();
+        String isAuth = TruvideoSdkCamera.getInstance().getVersion();
         JSObject ret = new JSObject();
         Log.i("Echo", "version");
         ret.put("version", isAuth);
@@ -58,7 +59,7 @@ public class TruvideoSdkCameraPlugin extends Plugin implements NotifyJs {
 
     @PluginMethod
     public void environment(PluginCall call){
-        String isAuth = TruvideoSdkCamera.TruvideoSdkCamera.getEnvironment();
+        String isAuth = TruvideoSdkCamera.getInstance().getEnvironment();
         JSObject ret = new JSObject();
         Log.i("Echo", "version");
         ret.put("environment", isAuth);
@@ -67,7 +68,7 @@ public class TruvideoSdkCameraPlugin extends Plugin implements NotifyJs {
 
     @PluginMethod
     public void isAugmentedRealityInstalled(PluginCall call){
-        Boolean isAuth = TruvideoSdkCamera.TruvideoSdkCamera.isAugmentedRealityInstalled();
+        Boolean isAuth = TruvideoSdkCamera.getInstance().isAugmentedRealityInstalled();
         JSObject ret = new JSObject();
         Log.i("Echo", "version");
         ret.put("isAugmentedRealityInstalled", isAuth);
@@ -76,7 +77,7 @@ public class TruvideoSdkCameraPlugin extends Plugin implements NotifyJs {
 
     @PluginMethod
     public void isAugmentedRealitySupported(PluginCall call){
-        Boolean isAuth = TruvideoSdkCamera.TruvideoSdkCamera.isAugmentedRealitySupported();
+        Boolean isAuth = TruvideoSdkCamera.getInstance().isAugmentedRealitySupported();
         JSObject ret = new JSObject();
         Log.i("Echo", "version");
         ret.put("isAugmentedRealitySupported", isAuth);
