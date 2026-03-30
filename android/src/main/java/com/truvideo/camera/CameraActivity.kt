@@ -40,6 +40,7 @@ class CameraActivity : ComponentActivity() {
     private var configuration = ""
     private var lensFacing = TruvideoSdkCameraLensFacing.BACK
     private var flashMode = TruvideoSdkCameraFlashMode.OFF
+    private var streamingUpload = false
     private var orientation: TruvideoSdkCameraOrientation? = null
     private var mode : TruvideoSdkCameraMode = TruvideoSdkCameraMode.VideoAndImage()
     private var from = ""
@@ -318,6 +319,7 @@ class CameraActivity : ComponentActivity() {
             backResolutions = backResolutions,
             backResolution = backResolution,
             mode = mode,
+            streamingUpload = streamingUpload,
             imageFormat = imageFormat,
             videoStabilizationEnabled = videoStabilizationEnabled
         )
@@ -329,6 +331,14 @@ class CameraActivity : ComponentActivity() {
 
     private fun checkConfigure() {
         val jsonConfiguration = JSONObject(configuration)
+
+        if (jsonConfiguration.has("streamingUpload")) {
+            when (jsonConfiguration.getString("streamingUpload")) {
+                "on" -> streamingUpload = true
+                "off" -> streamingUpload = false
+            }
+        }
+
         if (jsonConfiguration.has("lensFacing")) {
             when (jsonConfiguration.getString("lensFacing")) {
                 "back" -> lensFacing = TruvideoSdkCameraLensFacing.BACK
