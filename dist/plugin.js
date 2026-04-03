@@ -225,9 +225,14 @@ var capacitorTruvideoSdkCamera = (function (exports, core) {
     function requestInstallAugmentedReality() {
         return TruvideoSdkCamera.requestInstallAugmentedReality();
     }
+    async function getCameraInformation() {
+        let response = await TruvideoSdkCamera.getCameraInformation();
+        return parsePluginResponse(response, "value");
+    }
 
     exports.CameraMode = CameraMode;
     exports.environment = environment;
+    exports.getCameraInformation = getCameraInformation;
     exports.initARCameraScreen = initARCameraScreen;
     exports.initARCameraScreenTS = initARCameraScreenTS;
     exports.initCameraScreen = initCameraScreen;

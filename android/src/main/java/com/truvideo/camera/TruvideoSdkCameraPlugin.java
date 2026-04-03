@@ -84,6 +84,14 @@ public class TruvideoSdkCameraPlugin extends Plugin implements NotifyJs {
         call.resolve(ret);
     }
 
+    @PluginMethod
+    public void getCameraInformation(PluginCall call){
+        pluginCall = call;
+        mainBridge = bridge;
+        notifyJs = this;
+        getContext().startActivity(new Intent(getContext(), CameraActivity.class).putExtra("from","getCameraInformation"));
+    }
+
     @Override
     public void sendEventJS(String event, JSObject object) {
         notifyListeners(event,object);

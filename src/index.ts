@@ -176,3 +176,8 @@ export function isAugmentedRealitySupported(): Promise<string> {
 export function requestInstallAugmentedReality(): Promise<string> {
     return TruvideoSdkCamera.requestInstallAugmentedReality();
 }
+
+export async function getCameraInformation(): Promise<string> {
+    let response = await TruvideoSdkCamera.getCameraInformation();
+    return parsePluginResponse<string>(response, "value");
+}

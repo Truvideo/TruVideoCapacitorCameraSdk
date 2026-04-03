@@ -18,3 +18,4 @@ export declare function environment(): Promise<string>;
 export declare function isAugmentedRealityInstalled(): Promise<string>;
 export declare function isAugmentedRealitySupported(): Promise<string>;
 export declare function requestInstallAugmentedReality(): Promise<string>;
+export declare function getCameraInformation(): Promise<string>;

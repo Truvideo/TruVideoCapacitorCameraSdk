@@ -6,8 +6,10 @@ export interface TruvideoSdkCameraPlugin {
 
   version(): Promise<string>;
   environment(): Promise<string>;
-  
+
   isAugmentedRealityInstalled(): Promise<string>;
   isAugmentedRealitySupported(): Promise<string>;
   requestInstallAugmentedReality(): Promise<string>;
+
+  getCameraInformation(): Promise<{ value: string }>;
 }

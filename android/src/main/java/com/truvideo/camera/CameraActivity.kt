@@ -65,6 +65,8 @@ class CameraActivity : ComponentActivity() {
             startAR()
         }else if(from.equals("QR",false)){
             startQR()
+        }else if(from.equals("getCameraInformation", true)){
+            getCameraInformation()
         }
     }
 
@@ -365,7 +367,7 @@ class CameraActivity : ComponentActivity() {
             frontResolution = parseResolution(jsonConfiguration.getJSONObject("frontResolution"))
         }
 
-// Back Resolutions
+        // Back Resolutions
         if (jsonConfiguration.has("backResolutions")&&
             jsonConfiguration.getString("backResolutions").isNotEmpty() &&
             jsonConfiguration.getString("backResolutions") != "[]") {
@@ -513,6 +515,23 @@ class CameraActivity : ComponentActivity() {
 //                    )
 //                }
             }
+        }
+    }
+
+    private fun getCameraInformation() {
+        try {
+            val info = TruvideoSdkCamera.getInformation()
+            val ret = JSObject()
+            ret.put("value", info.toJson())
+            TruvideoSdkCameraPlugin.pluginCall.resolve(ret)
+        } catch (e: Exception) {
+            TruvideoSdkCameraPlugin.pluginCall.reject(
+                "CAMERA_ERROR",
+                e.message ?: "Failed to get camera information",
+                e
+            )
+        } finally {
+            finish()
         }
     }
 }

@@ -102,6 +102,16 @@
         "docs": "",
         "complexTypes": [],
         "slug": "requestinstallaugmentedreality"
+      },
+      {
+        "name": "getCameraInformation",
+        "signature": "() => Promise<{ value: string; }>",
+        "parameters": [],
+        "returns": "Promise<{ value: string; }>",
+        "tags": [],
+        "docs": "",
+        "complexTypes": [],
+        "slug": "getcamerainformation"
       }
     ],
     "properties": []

@@ -21,6 +21,7 @@ npx cap sync
 * [`isAugmentedRealityInstalled()`](#isaugmentedrealityinstalled)
 * [`isAugmentedRealitySupported()`](#isaugmentedrealitysupported)
 * [`requestInstallAugmentedReality()`](#requestinstallaugmentedreality)
+* [`getCameraInformation()`](#getcamerainformation)
 
 </docgen-index>
 
@@ -123,6 +124,17 @@ requestInstallAugmentedReality() => Promise<string>
 ```
 
 **Returns:** <code>Promise&lt;string&gt;</code>
+
+--------------------
+
+
+### getCameraInformation()
+
+```typescript
+getCameraInformation() => Promise<{ value: string; }>
+```
+
+**Returns:** <code>Promise&lt;{ value: string; }&gt;</code>
 
 --------------------
 
