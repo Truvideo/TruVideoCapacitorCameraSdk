@@ -27,7 +27,8 @@ import com.truvideo.sdk.camera.model.TruvideoSdkCameraScannerValidationResult
 import com.truvideo.sdk.camera.model.external.TruvideoSdkCameraConfiguration
 import com.truvideo.sdk.camera.model.external.TruvideoSdkCameraEvent
 import com.truvideo.sdk.camera.model.external.TruvideoSdkCameraMode
-import com.truvideo.sdk.camera.ui.activities.arcamera.TruvideoSdkArCameraContract
+//import com.truvideo.sdk.camera.ui.activities.TruvideoSdkArCameraContract
+import com.truvideo.sdk.camera.ui.activities.proposal.TruvideoSdkNewArCameraContract
 import com.truvideo.sdk.camera.ui.activities.camera.TruvideoSdkCameraContract
 import com.truvideo.sdk.camera.ui.activities.scanner.TruvideoSdkCameraScannerContract
 import kotlinx.coroutines.launch
@@ -156,7 +157,7 @@ class CameraActivity : ComponentActivity() {
         return list
     }
     fun startAR(){
-        val arScreen = registerForActivityResult(TruvideoSdkArCameraContract()){
+        val arScreen = registerForActivityResult(TruvideoSdkNewArCameraContract()){
             val ret = JSObject()
             ret.put("value",Gson().toJson(it))
             TruvideoSdkCameraPlugin.pluginCall.resolve(ret)

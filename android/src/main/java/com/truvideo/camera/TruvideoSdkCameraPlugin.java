@@ -10,6 +10,7 @@ import com.getcapacitor.PluginCall;
 import com.getcapacitor.PluginMethod;
 import com.getcapacitor.annotation.CapacitorPlugin;
 import com.truvideo.sdk.camera.TruvideoSdkCamera;
+import com.truvideo.sdk.core.TruvideoSdk;
 
 
 @CapacitorPlugin(name = "TruvideoSdkCamera")
@@ -50,7 +51,7 @@ public class TruvideoSdkCameraPlugin extends Plugin implements NotifyJs {
 
     @PluginMethod
     public void version(PluginCall call){
-        String isAuth = TruvideoSdkCamera.getInstance().getVersion();
+        String isAuth = TruvideoSdk.getInstance().getVersion();
         JSObject ret = new JSObject();
         Log.i("Echo", "version");
         ret.put("version", isAuth);
@@ -59,7 +60,7 @@ public class TruvideoSdkCameraPlugin extends Plugin implements NotifyJs {
 
     @PluginMethod
     public void environment(PluginCall call){
-        String isAuth = TruvideoSdkCamera.getInstance().getEnvironment();
+        String isAuth = TruvideoSdk.getInstance().getEnvironment().name();
         JSObject ret = new JSObject();
         Log.i("Echo", "version");
         ret.put("environment", isAuth);
