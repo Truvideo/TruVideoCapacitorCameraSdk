@@ -1,6 +1,6 @@
 {
   "name": "@trunpm/truvideo-capacitor-camera-sdk",
-  "version": "2.0.0-beta.1",
+  "version": "2.0.0-beta.2",
   "description": "camera module functionality of Truvideo video camera sdk",
   "main": "dist/plugin.cjs.js",
   "module": "dist/esm/index.js",
